@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleStoreRequest;
-use App\Http\Resources\EmployeeResource;
+use App\Http\Requests\Store\RoleStoreRequest;
+use App\Http\Requests\Update\RoleUpdateRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -50,9 +50,15 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(RoleUpdateRequest $request, string $id)
     {
-        //
+        $role = Role::find($id);
+        if ($role) {
+            $role->update($request->all());
+            return new RoleResource($role);
+        } else {
+            return response()->json('Role not found', 404);
+        }
     }
 
     /**

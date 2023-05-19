@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoomStoreRequest;
+use App\Http\Requests\Store\RoomStoreRequest;
+use App\Http\Requests\Update\RoleUpdateRequest;
+use App\Http\Requests\Update\RoomUpdateRequest;
+use App\Http\Resources\RoleResource;
 use App\Http\Resources\RoomResource;
 use App\Models\Room;
 use Illuminate\Http\Request;
@@ -49,9 +52,15 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(RoomUpdateRequest $request, string $id)
     {
-        //
+        $room = Room::find($id);
+        if ($room) {
+            $room->update($request->all());
+            return new RoomResource($room);
+        } else {
+            return response()->json('Room not found', 404);
+        }
     }
 
     /**

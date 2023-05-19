@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Store\ReservationStoreRequest;
+use App\Http\Requests\Update\ReservationUpdateRequest;
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
@@ -14,13 +16,18 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        Reservation::all();
+        $reservation = Reservation::all();
+        if ($reservation) {
+            return ReservationResource::collection(Reservation::all());
+        } else {
+            return response()->json('Reservations not found', 404);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ReservationStoreRequest $request)
     {
         $reservation = Reservation::create($request->validated());
 
@@ -32,15 +39,26 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        Reservation::find($id);
+        $reservation = Reservation::find($id);
+        if ($reservation) {
+            return new ReservationResource($reservation);
+        } else {
+            return response()->json('Reservation not found', 404);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ReservationUpdateRequest $request, string $id)
     {
-        //
+        $reservation = Reservation::find($id);
+        if ($reservation) {
+            $reservation->update($request->all());
+            return new ReservationResource($reservation);
+        } else {
+            return response()->json('Reservation not found', 404);
+        }
     }
 
     /**

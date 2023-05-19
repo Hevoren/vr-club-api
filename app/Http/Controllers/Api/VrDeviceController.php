@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\VrDeviceStoreRequest;
+use App\Http\Requests\Store\VrDeviceStoreRequest;
+use App\Http\Requests\Update\VrDeviceUpdateRequest;
 use App\Http\Resources\VrDeviceResource;
 use App\Models\VrDevice;
 use Illuminate\Http\Request;
@@ -49,9 +50,15 @@ class VrDeviceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(VrDeviceUpdateRequest $request, string $id)
     {
-        //
+        $vrdevice = VrDevice::find($id);
+        if ($vrdevice) {
+            $vrdevice->update($request->all());
+            return new VrDeviceResource($vrdevice);
+        } else {
+            return response()->json('VrDevice not found', 404);
+        }
     }
 
     /**

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StatusStoreRequest;
+use App\Http\Requests\Store\StatusStoreRequest;
+use App\Http\Requests\Update\StatusUpdateRequest;
 use App\Http\Resources\StatusResource;
 use App\Models\Statuse;
 use Illuminate\Http\Request;
@@ -49,9 +50,15 @@ class StatusController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StatusUpdateRequest $request, string $id)
     {
-        //
+        $status = Statuse::find($id);
+        if ($status) {
+            $status->update($request->all());
+            return new StatusResource($status);
+        } else {
+            return response()->json('Status not found', 404);
+        }
     }
 
     /**

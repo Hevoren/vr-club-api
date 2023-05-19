@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\GameStoreRequest;
+use App\Http\Requests\Store\GameStoreRequest;
+use App\Http\Requests\Update\GameUpdateRequest;
+use App\Http\Resources\GameResource;
 use App\Models\Game;
 use Illuminate\Http\Request;
-use App\Http\Resources\GameResource;
 
 class GameController extends Controller
 {
@@ -49,9 +50,15 @@ class GameController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(GameUpdateRequest $request, string $id)
     {
-        //
+        $game = Game::find($id);
+        if ($game) {
+            $game->update($request->all());
+            return new GameResource($game);
+        } else {
+            return response()->json('Game not found', 404);
+        }
     }
 
     /**
