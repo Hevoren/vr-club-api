@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Models\Statuse;
 use http\Env\Response;
@@ -15,7 +16,13 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-       return Employee::all();
+        $employee = Employee::all();
+        if ($employee) {
+            return EmployeeResource::collection(Employee::all()); 
+        } else {
+            return response()->json('Employees not found', 404);
+        }
+        
     }
 
     /**
@@ -31,7 +38,12 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        return Employee::find($id);
+        $employee = Employee::find($id);
+        if ($employee) {
+            return new EmployeeResource($employee);
+        } else {
+            return response()->json('Employee not found', 404);
+        }
     }
 
     /**
