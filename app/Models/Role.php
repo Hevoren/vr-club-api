@@ -11,4 +11,9 @@ class Role extends Model
     protected $primaryKey = 'role_id';
 
     use HasFactory;
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'role_id', 'role_id');
+    }
 }

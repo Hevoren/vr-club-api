@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ComputerResource;
 use App\Models\Computer;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,12 @@ class ComputerController extends Controller
      */
     public function index()
     {
-        return Computer::all();
+        $computer = Computer::all();
+        if ($computer) {
+            return ComputerResource::collection(Computer::all());
+        } else {
+            return response()->json('Computer not found', 404);
+        }
     }
 
     /**
@@ -29,7 +35,12 @@ class ComputerController extends Controller
      */
     public function show(string $id)
     {
-        return Computer::find($id);
+        $computer = Computer::find($id);
+        if ($computer) {
+            return new ComputerResource($computer);
+        } else {
+            return response()->json('Computers not found', 404);
+        }
     }
 
     /**

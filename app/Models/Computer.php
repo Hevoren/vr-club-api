@@ -11,4 +11,9 @@ class Computer extends Model
     protected $primaryKey = 'computer_id';
 
     use HasFactory;
+
+    public function vrdevices()
+    {
+        return $this->hasMany(VrDevice::class, 'computer_id', 'computer_id');
+    }
 }

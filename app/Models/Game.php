@@ -11,4 +11,9 @@ class Game extends Model
     protected $primaryKey = 'game_id';
 
     use HasFactory;
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'game_id', 'game_id');
+    }
 }

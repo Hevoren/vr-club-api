@@ -11,4 +11,14 @@ class VrDevice extends Model
     protected $primaryKey = 'vr_device_id';
 
     use HasFactory;
+
+    public function computers()
+    {
+        return $this->belongsTo(Computer::class, 'computer_id', 'computer_id');
+    }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'vr_devices_id', 'vr_devices_id');
+    }
 }

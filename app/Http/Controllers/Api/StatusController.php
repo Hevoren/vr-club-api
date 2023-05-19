@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StatusResource;
-use App\Models\Employee;
 use App\Models\Statuse;
 use Illuminate\Http\Request;
 
@@ -17,7 +16,7 @@ class StatusController extends Controller
     {
         $status = Statuse::all();
         if ($status) {
-            return StatusResource::collection(Statuse::all()); 
+            return StatusResource::collection(Statuse::all());
         } else {
             return response()->json('Statuses not found', 404);
         }

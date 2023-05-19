@@ -16,8 +16,16 @@ class GameFactory extends Factory
      */
     public function definition(): array
     {
+
+        $game = $this->faker->randomElement(['CS', 'Minecraft', 'WoT', 'War']);
+        $genre = $this->faker->randomElement(['Horror', 'Puzzle', 'Action']);
+
         return [
-            //
+            'game' => $game,
+            'age_limit' => $this->faker->numberBetween(6, 18),
+            'duration' => $this->faker->numberBetween(20, 50),
+            'genre' => $genre,
+            'price' => $this->faker->numberBetween(600, 1200)
         ];
     }
 }

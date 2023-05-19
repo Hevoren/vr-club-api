@@ -16,4 +16,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Statuse::class, 'status_id', 'status_id');
     }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'employee_id', 'employee_id');
+    }
 }

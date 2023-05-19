@@ -21,7 +21,6 @@ class GameResource extends JsonResource
             'duration' => $this->duration,
             'genre' => $this->genre,
             'price' => $this->price,
-    
-        ]; 
+        ];
     }
 }

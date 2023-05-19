@@ -14,7 +14,7 @@ class StatuseSeeder extends Seeder
      */
     public function run(): void
     {
-        $statuses = Statuse::factory()->count(3)->create();
+        Statuse::factory()->count(3)->create();
 
         // Создаем 10 сотрудников
         Employee::factory()->count(20)->create([
