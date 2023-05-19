@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Game;
 use Illuminate\Http\Request;
+use App\Http\Resources\GameResource;
 
 class GameController extends Controller
 {
@@ -13,7 +14,12 @@ class GameController extends Controller
      */
     public function index()
     {
-        return Game::all();
+        $game = Game::all();
+        if ($game) {
+            return GameResource::collection(Game::all()); 
+        } else {
+            return response()->json('Games not found', 404);
+        }
     }
 
     /**
@@ -29,7 +35,12 @@ class GameController extends Controller
      */
     public function show(string $id)
     {
-        return Game::find($id);
+        $game = Game::find($id);
+        if ($game) {
+            return new GameResource($game);
+        } else {
+            return response()->json('Game not found', 404);
+        }
     }
 
     /**
