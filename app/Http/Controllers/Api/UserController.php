@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,15 +15,22 @@ class UserController extends Controller
      */
     public function index()
     {
-        User::all();
+        $user = User::all();
+        if ($user) {
+            return UserResource::collection(User::all());
+        } else {
+            return response()->json('Users not found', 404);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        $user = User::create($request->validated());
+
+        return new UserResource($user);
     }
 
     /**
@@ -29,7 +38,12 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        User::find($id);
+        $user = User::find($id);
+        if ($user) {
+            return new UserResource($user);
+        } else {
+            return response()->json('User not found', 404);
+        }
     }
 
     /**

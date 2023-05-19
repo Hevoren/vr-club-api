@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ComputerStoreRequest;
 use App\Http\Resources\ComputerResource;
 use App\Models\Computer;
 use Illuminate\Http\Request;
@@ -25,9 +26,12 @@ class ComputerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ComputerStoreRequest $request): ComputerResource
     {
-        //
+        $computer = Computer::create($request->validated());
+
+        return new ComputerResource($computer);
+
     }
 
     /**

@@ -10,6 +10,16 @@ class Employee extends Model
     protected $table = 'employees';
     protected $primaryKey = 'employee_id';
 
+    protected $fillable = [
+        'status_id',
+        'name',
+        'surname',
+        'mid_name',
+        'salary',
+        'title',
+        'phone_number'
+    ];
+
     use HasFactory;
 
     public function statuses()

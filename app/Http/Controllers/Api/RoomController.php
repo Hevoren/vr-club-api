@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoomStoreRequest;
+use App\Http\Resources\RoomResource;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
@@ -13,15 +15,22 @@ class RoomController extends Controller
      */
     public function index()
     {
-        Room::all();
+        $room = Room::all();
+        if ($room) {
+            return RoomResource::collection(Room::all());
+        } else {
+            return response()->json('Rooms not found', 404);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RoomStoreRequest $request)
     {
-        //
+        $room = Room::create($request->validated());
+
+        return new RoomResource($room);
     }
 
     /**
@@ -29,7 +38,12 @@ class RoomController extends Controller
      */
     public function show(string $id)
     {
-        Room::find($id);
+        $room = Room::find($id);
+        if ($room) {
+            return new RoomResource($room);
+        } else {
+            return response()->json('Room not found', 404);
+        }
     }
 
     /**

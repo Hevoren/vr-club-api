@@ -10,6 +10,12 @@ class VrDevice extends Model
     protected $table = 'vr_devices';
     protected $primaryKey = 'vr_device_id';
 
+    protected $fillable = [
+        'vr_glasses',
+        'controller',
+        'computer_id'
+    ];
+
     use HasFactory;
 
     public function computers()

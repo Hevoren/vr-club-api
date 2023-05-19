@@ -10,6 +10,14 @@ class Game extends Model
     protected $table = 'games';
     protected $primaryKey = 'game_id';
 
+    protected $fillable = [
+      'game',
+      'age_limit',
+      'duration',
+      'genre',
+      'price'
+    ];
+
     use HasFactory;
 
     public function reservations()

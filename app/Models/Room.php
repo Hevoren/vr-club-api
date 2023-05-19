@@ -10,6 +10,13 @@ class Room extends Model
     protected $table = 'rooms';
     protected $primaryKey = 'room_id';
 
+    protected $fillable = [
+        'type_room',
+        'vr_device_id',
+        'employee_id',
+        'price'
+    ];
+
     use HasFactory;
 
     public function vrdevices()

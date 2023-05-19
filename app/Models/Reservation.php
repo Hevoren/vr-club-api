@@ -10,6 +10,15 @@ class Reservation extends Model
     protected $table = 'reservations';
     protected $primaryKey = 'reservation_id';
 
+    protected $fillable = [
+        'user_id',
+        'reservation_time',
+        'peoples',
+        'game_id',
+        'room',
+        'all_price'
+    ];
+
     use HasFactory;
 
     public function games()

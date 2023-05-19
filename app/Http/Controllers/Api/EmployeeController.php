@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EmployeeStoreRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Models\Statuse;
@@ -18,19 +19,21 @@ class EmployeeController extends Controller
     {
         $employee = Employee::all();
         if ($employee) {
-            return EmployeeResource::collection(Employee::all()); 
+            return EmployeeResource::collection(Employee::all());
         } else {
             return response()->json('Employees not found', 404);
         }
-        
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EmployeeStoreRequest $request)
     {
-        //
+        $employee = Employee::create($request->validated());
+
+        return new EmployeeResource($employee);
     }
 
     /**

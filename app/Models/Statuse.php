@@ -10,6 +10,10 @@ class Statuse extends Model
     protected $table = 'statuses';
     protected $primaryKey = 'status_id';
 
+    protected $fillable = [
+        'status'
+    ];
+
     use HasFactory;
 
     public function employees()

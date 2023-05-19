@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GameStoreRequest;
 use App\Models\Game;
 use Illuminate\Http\Request;
 use App\Http\Resources\GameResource;
@@ -16,7 +17,7 @@ class GameController extends Controller
     {
         $game = Game::all();
         if ($game) {
-            return GameResource::collection(Game::all()); 
+            return GameResource::collection(Game::all());
         } else {
             return response()->json('Games not found', 404);
         }
@@ -25,9 +26,11 @@ class GameController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(GameStoreRequest $request)
     {
-        //
+        $game = Game::create($request->validated());
+
+        return new GameResource($game);
     }
 
     /**

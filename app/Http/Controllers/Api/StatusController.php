@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StatusStoreRequest;
 use App\Http\Resources\StatusResource;
 use App\Models\Statuse;
 use Illuminate\Http\Request;
@@ -25,9 +26,11 @@ class StatusController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StatusStoreRequest $request)
     {
-        //
+        $status = Statuse::create($request->validated());
+
+        return new StatusResource($status);
     }
 
     /**

@@ -10,6 +10,10 @@ class Role extends Model
     protected $table = 'roles';
     protected $primaryKey = 'role_id';
 
+    protected $fillable = [
+        'role'
+    ];
+
     use HasFactory;
 
     public function users()

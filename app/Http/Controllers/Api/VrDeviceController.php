@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\VrDeviceStoreRequest;
+use App\Http\Resources\VrDeviceResource;
 use App\Models\VrDevice;
 use Illuminate\Http\Request;
 
@@ -13,15 +15,22 @@ class VrDeviceController extends Controller
      */
     public function index()
     {
-        VrDevice::all();
+        $vrdevice = VrDevice::all();
+        if ($vrdevice) {
+            return VrDeviceResource::collection(VrDevice::all());
+        } else {
+            return response()->json('VrDevices not found', 404);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(VrDeviceStoreRequest $request)
     {
-        //
+        $vrdevice = VrDevice::create($request->validated());
+
+        return new VrDeviceResource($vrdevice);
     }
 
     /**
@@ -29,7 +38,12 @@ class VrDeviceController extends Controller
      */
     public function show(string $id)
     {
-        VrDevice::find($id);
+        $vrdevice = VrDevice::find($id);
+        if ($vrdevice) {
+            return new VrDeviceResource($vrdevice);
+        } else {
+            return response()->json('VrDevice not found', 404);
+        }
     }
 
     /**

@@ -10,6 +10,12 @@ class Computer extends Model
     protected $table = 'computers';
     protected $primaryKey = 'computer_id';
 
+    protected $fillable  = [
+        'graphic_card',
+        'processor',
+        'ram'
+    ];
+
     use HasFactory;
 
     public function vrdevices()
