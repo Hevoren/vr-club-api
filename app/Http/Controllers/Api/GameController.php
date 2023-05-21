@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\GameStoreRequest;
 use App\Http\Requests\Update\GameUpdateRequest;
 use App\Http\Resources\GameResource;
@@ -64,8 +65,15 @@ class GameController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
-        //
+        $game = Game::findOrFail($id);
+
+        if($request->user()->tokenCan('delete')) {
+            $game->delete();
+            return response()->json('Game deleted');
+        } else {
+            return response()->json('Unauthorized', 401);
+        }
     }
 }

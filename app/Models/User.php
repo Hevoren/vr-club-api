@@ -4,9 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
+    use HasApiTokens, HasFactory, Notifiable;
+
     protected $table = 'users';
     protected $primaryKey = 'user_id';
 
@@ -15,11 +20,8 @@ class User extends Model
         'surname',
         'login',
         'password',
-        'email',
-        'role_id'
+        'email'
     ];
-
-    use HasFactory;
 
     public function reservations()
     {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\StatusStoreRequest;
 use App\Http\Requests\Update\StatusUpdateRequest;
 use App\Http\Resources\StatusResource;
@@ -64,17 +65,16 @@ class StatusController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
         $status = Statuse::findOrFail($id);
-        if ($status) {
+
+        if ($request->user()->tokenCan('delete')) {
             $status->delete();
-            return response()->json('status delete');
+            return response()->json('Status deleted');
         } else {
-            return response()->json(error);
+            return response()->json('Unauthorized');
         }
-
-
     }
 
     public function destroyAll()

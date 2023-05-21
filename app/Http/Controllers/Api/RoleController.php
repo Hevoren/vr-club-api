@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\RoleStoreRequest;
 use App\Http\Requests\Update\RoleUpdateRequest;
 use App\Http\Resources\RoleResource;
@@ -64,8 +65,15 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+
+        if ($request->user()->tokenCan('delete')) {
+            $role->delete();
+            return response()->json('Role deleted');
+        } else {
+            return response()->json('Unauthorized');
+        }
     }
 }

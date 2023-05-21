@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\RoomStoreRequest;
 use App\Http\Requests\Update\RoleUpdateRequest;
 use App\Http\Requests\Update\RoomUpdateRequest;
@@ -66,8 +67,15 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
-        //
+        $room = Room::findOrFail($id);
+
+        if ($request->user()->tokenCan('delete')) {
+            $room->delete();
+            return response()->json('Room deleted');
+        } else {
+            return response()->json('Unauthorized');
+        }
     }
 }

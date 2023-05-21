@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\UserStoreRequest;
 use App\Http\Requests\Update\UserUpdateRequest;
 use App\Http\Resources\UserResource;
@@ -64,8 +65,15 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        if ($request->user()->tokenCan('delete')) {
+            $user->delete();
+            return response()->json('User deleted');
+        } else {
+            return response()->json('Unauthorized');
+        }
     }
 }

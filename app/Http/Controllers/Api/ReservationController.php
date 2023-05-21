@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\ReservationStoreRequest;
 use App\Http\Requests\Update\ReservationUpdateRequest;
 use App\Http\Resources\ReservationResource;
@@ -64,8 +65,15 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
-        //
+        $reservation = Reservaion::findOrFail($id);
+
+        if ($request->user()->tokenCan('delete')) {
+            $reservation->delete();
+            return response()->json('Reservaion deleted');
+        } else {
+            return response()->json('Unauthorized');
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\EmployeeStoreRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
@@ -64,17 +65,16 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
         $employee = Employee::findOrFail($id);
-        if ($employee) {
+
+        if ($request->user()->token('delete')) {
             $employee->delete();
-            return response()->json('employee delete');
+            return response()->json('Employee delete');
         } else {
-            return response()->json(error);
+            return response()->json('Unauthorized', 401);
         }
-
-
     }
 
     public function destroyAll()

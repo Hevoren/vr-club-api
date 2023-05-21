@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\VrDeviceStoreRequest;
 use App\Http\Requests\Update\VrDeviceUpdateRequest;
 use App\Http\Resources\VrDeviceResource;
@@ -64,8 +65,16 @@ class VrDeviceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DeleteRequest $request, string $id)
     {
-        //
+        $vrdevice = VrDevice::findOrFail($id);
+
+        // Проверяем, авторизован ли пользователь и имеет ли он права на удаление
+        if ($request->user()->tokenCan('delete')) {
+            $vrdevice->delete();
+            return response()->json('VrDevice deleted');
+        } else {
+            return response()->json('Unauthorized', 401);
+        }
     }
 }
