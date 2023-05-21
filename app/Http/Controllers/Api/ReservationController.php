@@ -21,7 +21,7 @@ class ReservationController extends Controller
         if ($reservation) {
             return ReservationResource::collection(Reservation::all());
         } else {
-            return response()->json('Reservations not found', 404);
+            return response()->json(['message' => 'Reservations not found'], 404);
         }
     }
 
@@ -31,8 +31,10 @@ class ReservationController extends Controller
     public function store(ReservationStoreRequest $request)
     {
         $reservation = Reservation::create($request->validated());
-
-        return new ReservationResource($reservation);
+        return (new ReservationResource($reservation))
+            ->additional(['message' => 'Reservation success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,7 +46,7 @@ class ReservationController extends Controller
         if ($reservation) {
             return new ReservationResource($reservation);
         } else {
-            return response()->json('Reservation not found', 404);
+            return response()->json(['message' => 'Reservation not found'], 404);
         }
     }
 
@@ -56,9 +58,12 @@ class ReservationController extends Controller
         $reservation = Reservation::find($id);
         if ($reservation) {
             $reservation->update($request->all());
-            return new ReservationResource($reservation);
+            return (new ReservationResource($reservation))
+                ->additional(['message' => 'Reservation successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('Reservation not found', 404);
+            return response()->json(['message' => 'Reservation not found'], 404);
         }
     }
 
@@ -71,9 +76,9 @@ class ReservationController extends Controller
 
         if ($request->user()->tokenCan('delete')) {
             $reservation->delete();
-            return response()->json('Reservaion deleted');
+            return response()->json(['message' => 'Reservation deleted']);
         } else {
-            return response()->json('Unauthorized');
+            return response()->json(['message' => 'Unauthorized']);
         }
     }
 }

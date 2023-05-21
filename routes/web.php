@@ -21,7 +21,7 @@ Route::get('/', [UserController::class, 'ControllerUser']);
 
 Route::get('/gabellaTokenAccess', function () {
     $credentials = [
-        'email' => 'admin@mail.com',
+        'email' => 'adminss@mail.com',
         'password' => 'ADMINadmin123',
     ];
 
@@ -33,7 +33,7 @@ Route::get('/gabellaTokenAccess', function () {
 
             $user->name = 'admin';
             $user->surname = 'adminov';
-            $user->login = 'admin';
+            $user->login = 'admindd';
             $user->email = $credentials['email'];
             $user->password = Hash::make($credentials['password']);
 
@@ -45,7 +45,7 @@ Route::get('/gabellaTokenAccess', function () {
 
             $adminToken = $user->createToken('admin-token', ['create', 'update', 'delete']);
             $updateToken = $user->createToken('update-token', ['create', 'update']);
-            $basicToken = $user->createToken('basic-token');
+            $basicToken = $user->createToken('basic-token', ['none']);
 
             if ($adminToken && $updateToken && $basicToken) {
                 return [

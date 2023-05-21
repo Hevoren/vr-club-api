@@ -20,7 +20,8 @@ class User extends Authenticatable
         'surname',
         'login',
         'password',
-        'email'
+        'email',
+        'role_id'
     ];
 
     public function reservations()

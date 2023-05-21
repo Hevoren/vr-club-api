@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\UserStoreRequest;
 use App\Http\Requests\Delete\DeleteRequest;
-use App\Http\Requests\Store\UserStoreRequest;
 use App\Http\Requests\Update\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -21,7 +20,7 @@ class UserController extends Controller
         if ($user) {
             return UserResource::collection(User::all());
         } else {
-            return response()->json('Users not found', 404);
+            return response()->json(['message' => 'Users not found'], 404);
         }
     }
 
@@ -31,8 +30,10 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         $user = User::create($request->validated());
-
-        return new UserResource($user);
+        return (new UserResource($user))
+            ->additional(['message' => 'User success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,7 +45,7 @@ class UserController extends Controller
         if ($user) {
             return new UserResource($user);
         } else {
-            return response()->json('User not found', 404);
+            return response()->json(['message' => 'User not found'], 404);
         }
     }
 
@@ -56,9 +57,12 @@ class UserController extends Controller
         $user = User::find($id);
         if ($user) {
             $user->update($request->all());
-            return new UserResource($user);
+            return (new UserResource($user))
+                ->additional(['message' => 'User successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('User not found', 404);
+            return response()->json(['message' => 'User not found'], 404);
         }
     }
 
@@ -71,9 +75,9 @@ class UserController extends Controller
 
         if ($request->user()->tokenCan('delete')) {
             $user->delete();
-            return response()->json('User deleted');
+            return response()->json(['message' => 'User deleted']);
         } else {
-            return response()->json('Unauthorized');
+            return response()->json(['message' => 'Unauthorized']);
         }
     }
 }

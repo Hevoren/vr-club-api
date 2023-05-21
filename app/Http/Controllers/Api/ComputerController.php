@@ -21,19 +21,21 @@ class ComputerController extends Controller
         if ($computer) {
             return ComputerResource::collection(Computer::all());
         } else {
-            return response()->json('Computer not found', 404);
+            return response()->json(['message' => 'Computer not found'], 404);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ComputerStoreRequest $request): ComputerResource
+    public function store(ComputerStoreRequest $request)
     {
         $computer = Computer::create($request->validated());
 
-        return new ComputerResource($computer);
-
+        return (new ComputerResource($computer))
+            ->additional(['message' => 'Computer success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -45,7 +47,7 @@ class ComputerController extends Controller
         if ($computer) {
             return new ComputerResource($computer);
         } else {
-            return response()->json('Computers not found', 404);
+            return response()->json(['message' => 'Computer not found'], 404);
         }
     }
 
@@ -57,9 +59,12 @@ class ComputerController extends Controller
         $computer = Computer::find($id);
         if ($computer) {
             $computer->update($request->all());
-            return new ComputerResource($computer);
+            return (new ComputerResource($computer))
+                ->additional(['message' => 'Computer successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('Computer not found', 404);
+            return response()->json(['message' => 'Computer not found'], 404);
         }
     }
 
@@ -73,9 +78,9 @@ class ComputerController extends Controller
             // Проверяем, авторизован ли пользователь и имеет ли он права на удаление
             if ($request->user()->tokenCan('delete')) {
                 $computer->delete();
-                return response()->json('Computer deleted');
+                return response()->json(['message' => 'Computer deleted'], 201);
             } else {
-                return response()->json('Unauthorized', 401);
+                return response()->json(['message' => 'Unauthorized'], 401);
             }
         }
 }

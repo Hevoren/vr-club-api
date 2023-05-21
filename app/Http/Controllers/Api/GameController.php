@@ -21,7 +21,7 @@ class GameController extends Controller
         if ($game) {
             return GameResource::collection(Game::all());
         } else {
-            return response()->json('Games not found', 404);
+            return response()->json(['message'=> 'Games not found'], 404);
         }
     }
 
@@ -31,8 +31,10 @@ class GameController extends Controller
     public function store(GameStoreRequest $request)
     {
         $game = Game::create($request->validated());
-
-        return new GameResource($game);
+        return (new GameResource($game))
+            ->additional(['message' => 'Game success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,7 +46,7 @@ class GameController extends Controller
         if ($game) {
             return new GameResource($game);
         } else {
-            return response()->json('Game not found', 404);
+            return response()->json(['message' => 'Game not found'], 404);
         }
     }
 
@@ -56,9 +58,12 @@ class GameController extends Controller
         $game = Game::find($id);
         if ($game) {
             $game->update($request->all());
-            return new GameResource($game);
+            return (new GameResource($game))
+                ->additional(['message' => 'Game successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('Game not found', 404);
+            return response()->json(['message' => 'Game not found'], 404);
         }
     }
 
@@ -71,9 +76,9 @@ class GameController extends Controller
 
         if($request->user()->tokenCan('delete')) {
             $game->delete();
-            return response()->json('Game deleted');
+            return response()->json(['message' => 'Game deleted']);
         } else {
-            return response()->json('Unauthorized', 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
     }
 }

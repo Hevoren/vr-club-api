@@ -23,7 +23,7 @@ class RoomController extends Controller
         if ($room) {
             return RoomResource::collection(Room::all());
         } else {
-            return response()->json('Rooms not found', 404);
+            return response()->json(['message' => 'Rooms not found'], 404);
         }
     }
 
@@ -33,8 +33,10 @@ class RoomController extends Controller
     public function store(RoomStoreRequest $request)
     {
         $room = Room::create($request->validated());
-
-        return new RoomResource($room);
+        return (new RoomResource($room))
+            ->additional(['message' => 'Room success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -46,7 +48,7 @@ class RoomController extends Controller
         if ($room) {
             return new RoomResource($room);
         } else {
-            return response()->json('Room not found', 404);
+            return response()->json(['message' => 'Room not found'], 404);
         }
     }
 
@@ -58,9 +60,12 @@ class RoomController extends Controller
         $room = Room::find($id);
         if ($room) {
             $room->update($request->all());
-            return new RoomResource($room);
+            return (new RoomResource($room))
+                ->additional(['message' => 'Room successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('Room not found', 404);
+            return response()->json(['message' => 'Room not found'], 404);
         }
     }
 
@@ -73,9 +78,9 @@ class RoomController extends Controller
 
         if ($request->user()->tokenCan('delete')) {
             $room->delete();
-            return response()->json('Room deleted');
+            return response()->json(['message' => 'Room deleted']);
         } else {
-            return response()->json('Unauthorized');
+            return response()->json(['message' => 'Unauthorized']);
         }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoomController;
@@ -26,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => 'auth:sanctum'], function () {
     Route::apiResource('computers', ComputerController::class);
     Route::apiResource('employees', EmployeeController::class);
@@ -36,7 +38,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => 'auth:s
     Route::apiResource('statuses', StatusController::class);
     Route::apiResource('users', UserController::class);
     Route::apiResource('vrdevices', VrDeviceController::class);
+    Route::post('logout', [AuthController::class, 'logoutUser']);
 });
 
-Route::delete('statuses', [StatusController::class, 'destroyAll']);
-Route::delete('employees', [EmployeeController::class, 'destroyAll']);
+Route::post('register', [AuthController::class, 'registerUser']);
+Route::post('login', [AuthController::class, 'loginUser']);

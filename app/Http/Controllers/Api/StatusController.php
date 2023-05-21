@@ -21,7 +21,7 @@ class StatusController extends Controller
         if ($status) {
             return StatusResource::collection(Statuse::all());
         } else {
-            return response()->json('Statuses not found', 404);
+            return response()->json(['message' => 'Statuses not found'], 404);
         }
     }
 
@@ -31,8 +31,10 @@ class StatusController extends Controller
     public function store(StatusStoreRequest $request)
     {
         $status = Statuse::create($request->validated());
-
-        return new StatusResource($status);
+        return (new StatusResource($status))
+            ->additional(['message' => 'Status success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,7 +46,7 @@ class StatusController extends Controller
         if ($status) {
             return new StatusResource($status);
         } else {
-            return response()->json('Status not found', 404);
+            return response()->json(['message' => 'Status not found'], 404);
         }
     }
 
@@ -56,9 +58,12 @@ class StatusController extends Controller
         $status = Statuse::find($id);
         if ($status) {
             $status->update($request->all());
-            return new StatusResource($status);
+            return (new StatusResource($status))
+                ->additional(['message' => 'Status successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('Status not found', 404);
+            return response()->json(['message' => 'Status success added'], 201);
         }
     }
 
@@ -71,9 +76,9 @@ class StatusController extends Controller
 
         if ($request->user()->tokenCan('delete')) {
             $status->delete();
-            return response()->json('Status deleted');
+            return response()->json(['message' => 'Status deleted']);
         } else {
-            return response()->json('Unauthorized');
+            return response()->json(['message' => 'Unauthorized']);
         }
     }
 

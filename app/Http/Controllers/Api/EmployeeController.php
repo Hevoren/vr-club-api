@@ -20,9 +20,8 @@ class EmployeeController extends Controller
         if ($employee) {
             return EmployeeResource::collection(Employee::all());
         } else {
-            return response()->json('Employees not found', 404);
+            return response()->json(['message' => 'Employees not found'], 404);
         }
-
     }
 
     /**
@@ -32,7 +31,10 @@ class EmployeeController extends Controller
     {
         $employee = Employee::create($request->validated());
 
-        return new EmployeeResource($employee);
+        return (new EmployeeResource($employee))
+            ->additional(['message' => 'Employee success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,7 +46,7 @@ class EmployeeController extends Controller
         if ($employee) {
             return new EmployeeResource($employee);
         } else {
-            return response()->json('Employee not found', 404);
+            return response()->json(['message' => 'Employee not found'], 404);
         }
     }
 
@@ -56,9 +58,12 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         if ($employee) {
             $employee->update($request->all());
-            return new EmployeeResource($employee);
+            return (new EmployeeResource($employee))
+                ->additional(['message' => 'Employee successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('Employee not found', 404);
+            return response()->json(['message' => 'Employee not found'], 404);
         }
     }
 
@@ -71,9 +76,9 @@ class EmployeeController extends Controller
 
         if ($request->user()->token('delete')) {
             $employee->delete();
-            return response()->json('Employee delete');
+            return response()->json(['message' => 'Employee delete'], 201);
         } else {
-            return response()->json('Unauthorized', 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
     }
 

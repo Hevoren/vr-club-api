@@ -21,7 +21,7 @@ class VrDeviceController extends Controller
         if ($vrdevice) {
             return VrDeviceResource::collection(VrDevice::all());
         } else {
-            return response()->json('VrDevices not found', 404);
+            return response()->json(['message' => 'VrDevices not found'], 404);
         }
     }
 
@@ -31,8 +31,10 @@ class VrDeviceController extends Controller
     public function store(VrDeviceStoreRequest $request)
     {
         $vrdevice = VrDevice::create($request->validated());
-
-        return new VrDeviceResource($vrdevice);
+        return (new VrDeviceResource($vrdevice))
+            ->additional(['message' => 'VrDevice success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,7 +46,7 @@ class VrDeviceController extends Controller
         if ($vrdevice) {
             return new VrDeviceResource($vrdevice);
         } else {
-            return response()->json('VrDevice not found', 404);
+            return response()->json(['message' => 'VrDevice not found'], 404);
         }
     }
 
@@ -56,9 +58,12 @@ class VrDeviceController extends Controller
         $vrdevice = VrDevice::find($id);
         if ($vrdevice) {
             $vrdevice->update($request->all());
-            return new VrDeviceResource($vrdevice);
+            return (new VrDeviceResource($vrdevice))
+                ->additional(['message' => 'VrDevice successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('VrDevice not found', 404);
+            return response()->json(['message' => 'VrDevice not found'], 404);
         }
     }
 
@@ -72,9 +77,9 @@ class VrDeviceController extends Controller
         // Проверяем, авторизован ли пользователь и имеет ли он права на удаление
         if ($request->user()->tokenCan('delete')) {
             $vrdevice->delete();
-            return response()->json('VrDevice deleted');
+            return response()->json(['message' => 'VrDevice deleted']);
         } else {
-            return response()->json('Unauthorized', 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
     }
 }

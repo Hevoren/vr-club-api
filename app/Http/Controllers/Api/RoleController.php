@@ -21,7 +21,7 @@ class RoleController extends Controller
         if ($role) {
             return RoleResource::collection(Role::all());
         } else {
-            return response()->json('Roles not found', 404);
+            return response()->json(['message' => 'Roles not found'], 404);
         }
     }
 
@@ -31,8 +31,10 @@ class RoleController extends Controller
     public function store(RoleStoreRequest $request)
     {
         $role = Role::create($request->validated());
-
-        return new RoleResource($role);
+        return (new RoleResource($role))
+            ->additional(['message' => 'Role success added'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**
@@ -44,7 +46,7 @@ class RoleController extends Controller
         if ($role) {
             return new RoleResource($role);
         } else {
-            return response()->json('Role not found', 404);
+            return response()->json(['message' => 'Role not found'], 404);
         }
     }
 
@@ -56,9 +58,12 @@ class RoleController extends Controller
         $role = Role::find($id);
         if ($role) {
             $role->update($request->all());
-            return new RoleResource($role);
+            return (new RoleResource($role))
+                ->additional(['message' => 'Role successfully updated'])
+                ->response()
+                ->setStatusCode(200);
         } else {
-            return response()->json('Role not found', 404);
+            return response()->json(['message' => 'Role not found'], 404);
         }
     }
 
@@ -71,9 +76,9 @@ class RoleController extends Controller
 
         if ($request->user()->tokenCan('delete')) {
             $role->delete();
-            return response()->json('Role deleted');
+            return response()->json(['message' => 'Role deleted']);
         } else {
-            return response()->json('Unauthorized');
+            return response()->json(['message' => 'Unauthorized']);
         }
     }
 }
