@@ -72,7 +72,7 @@ class ReservationController extends Controller
      */
     public function destroy(DeleteRequest $request, string $id)
     {
-        $reservation = Reservaion::findOrFail($id);
+        $reservation = Reservation::findOrFail($id);
 
         if ($request->user()->tokenCan('delete')) {
             $reservation->delete();
