@@ -18,7 +18,3 @@ use App\Models\User;
 */
 
 Route::get('/', [UserController::class, 'ControllerUser']);
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
