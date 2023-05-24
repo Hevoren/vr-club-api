@@ -28,8 +28,7 @@ class ReservationStoreRequest extends FormRequest
             'reservation_time' => 'required|date',
             'peoples' => 'required|integer',
             'game_id' => 'required|integer',
-            'room_id' => 'required|integer',
-            'all_price' => 'required|numeric'
+            'room_id' => 'required|integer'
         ];
     }
 }
