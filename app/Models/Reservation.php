@@ -15,7 +15,7 @@ class Reservation extends Model
         'reservation_time',
         'peoples',
         'game_id',
-        'room',
+        'room_id',
         'all_price'
     ];
 

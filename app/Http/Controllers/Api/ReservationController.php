@@ -7,7 +7,10 @@ use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\ReservationStoreRequest;
 use App\Http\Requests\Update\ReservationUpdateRequest;
 use App\Http\Resources\ReservationResource;
+use App\Models\Game;
 use App\Models\Reservation;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -30,11 +33,46 @@ class ReservationController extends Controller
      */
     public function store(ReservationStoreRequest $request)
     {
-        $reservation = Reservation::create($request->validated());
-        return (new ReservationResource($reservation))
-            ->additional(['message' => 'Reservation success added'])
-            ->response()
-            ->setStatusCode(201);
+        if ($request->validated()) {
+
+            $user_id = $request->user_id;
+            $game_id = $request->game_id;
+            $room_id = $request->room_id;
+
+            $user = User::where('user_id', $user_id)->first();
+            $game = Game::where('game_id', $game_id)->first();
+            $room = Room::where('room_id', $room_id)->first();
+
+            $game_price = $game->price;
+            $room_price = $room->price;
+
+            $all_price = $game_price + $room_price;
+
+            $reservation = Reservation::create([
+                'reservation_time' => $request->reservation_time,
+                'peoples' => $request->peoples,
+                'game_id' => $request->game_id,
+                'room_id' => $request->room_id,
+                'user_id' => $request->user_id,
+                'all_price' => $all_price
+            ]);
+
+            $balls = $user->balls;
+
+            $balls += $all_price * 0.01;
+
+            $user->balls = $balls;
+
+            $user->save();
+
+            return (new ReservationResource($reservation))
+                ->additional(['message' => 'Reservation success added'])
+                ->response()
+                ->setStatusCode(201);
+        }
+
+
+
     }
 
     /**
