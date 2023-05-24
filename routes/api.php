@@ -30,7 +30,7 @@ Route::get('user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:sanctum', 'signed']], function () {
+Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:sanctum', 'verify']], function () {
     Route::apiResource('computers', ComputerController::class);
     Route::apiResource('games', GameController::class);
     Route::apiResource('reservations', ReservationController::class);
@@ -57,7 +57,7 @@ Route::get('/email/verify', function (Request $request) {
 Route::get('/email/verify/again', function (Request $request) {
     $user = User::where('login', $request->login)->first();
     if (!$user->email_verified_at) {
-        event(new Registered($user));
+        $user->sendEmailVerificationNotification();
         return response()->json(['message' => 'On your email resend verification link']);
     }
     return response()->json(['message' => 'You already successfully verified account']);

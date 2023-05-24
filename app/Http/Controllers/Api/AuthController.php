@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\UserLoginRequest;
 use App\Http\Requests\Auth\UserStoreRequest;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,11 @@ class AuthController extends Controller
 
     public function registerUser(UserStoreRequest $request)
     {
+        if ($request->role_id === null){
+            $role = 2;
+        } else {
+            $role = 1;
+        }
         if ($request->validated()) {
             $user = User::create([
                 'name' => $request->name,
@@ -24,7 +30,7 @@ class AuthController extends Controller
                 'login' => $request->login,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role_id' => $request->role_id
+                'role_id' => $role
             ]);
 
             $user->sendEmailVerificationNotification();
@@ -45,13 +51,14 @@ class AuthController extends Controller
                     return response()->json(['message' => 'Account not verified'], 422);
                 }
 
+                $user->tokens()->delete();
+
                 $token = null;
                 if ($user->role_id === 1) {
                     $token = $user->createToken('admin-token', ['create', 'update', 'delete']);
                 } elseif ($user->role_id === 2) {
                     $token = $user->createToken('basic-token', ['none']);
                 }
-
                 if ($token) {
                     return response()->json([
                         'bearer' => $token->plainTextToken,
