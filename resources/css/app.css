@@ -1,0 +1,14 @@
+* {
+    margin: auto;
+    box-sizing: border-box;
+}
+
+body {
+    color: #eaeaea;
+    font-family: "Montserrat", serif;
+    background-image: linear-gradient(to bottom right, #451a14, #031b25);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+

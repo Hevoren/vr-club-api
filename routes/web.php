@@ -17,4 +17,6 @@ use App\Models\User;
 |
 */
 
-Route::get('/', [UserController::class, 'ControllerUser']);
+Route::get('/', function () {
+    return view('welcome');
+});
