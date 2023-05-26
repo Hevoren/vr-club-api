@@ -98,7 +98,6 @@ export default {
             return this.disableButtons
         },
     },
-
     beforeRouteLeave(to, from, next) {
         this.$store.dispatch('resetVariables');
         next();

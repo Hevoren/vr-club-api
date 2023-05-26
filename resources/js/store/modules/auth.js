@@ -21,9 +21,8 @@ const mutations = {
         state.validationErrors = null
         state.isLoading = true
     },
-    registerSuccess(state, payload) {
+    registerSuccess(state) {
         state.isSubmitting = false
-        state.currentUser = payload
         state.isLoggedIn = true
         state.isLoading = false
     },
@@ -39,6 +38,7 @@ const mutations = {
     loginSuccess(state, payload) {
         state.isSubmitting = false;
         state.currentUser = payload;
+        console.log(state.currentUser)
         state.isLoggedIn = true;
     },
     loginFailure(state, payload) {
@@ -64,6 +64,7 @@ const actions = {
     },
     login(context, credentials) {
         return new Promise((resolve) => {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('bearer');
             context.commit("loginStart");
             authApi
                 .login(credentials)
@@ -71,10 +72,10 @@ const actions = {
                     credentials.token = response.data.bearer;
                     context.commit("loginSuccess", credentials);
                     setItem("bearer", response.data.bearer);
+                    setItem("login", credentials.login);
                     resolve();
                 })
                 .catch((result) => {
-                    console.log(result)
                     if (result.response.status === 422) {
                         context.commit("loginFailure", {
                             error: ["Email or password incorrect"],

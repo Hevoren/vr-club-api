@@ -21,8 +21,8 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/', function () {
+Route::get('{any}', function () {
     return view('welcome');
-});
+})->where('any','.*');
 
 Route::get('/reset-password/{token}', [PageForgotPasswordController::class, 'getEmailForgotPassword'])->name('password.reset');

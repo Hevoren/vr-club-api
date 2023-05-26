@@ -1,6 +1,10 @@
 <script>
 export default {
-    name: "VrMain"
+    name: "VrMain",
+    beforeRouteLeave(to, from, next) {
+        this.$store.dispatch('resetVariables');
+        next();
+    }
 }
 </script>
 

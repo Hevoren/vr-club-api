@@ -5,6 +5,8 @@ import VrLogin from "../views/Login.vue"
 import VrRegister from "../views/Register.vue"
 import VrForgotPassword from "../views/ForgotPassword.vue"
 import VrResetPassword from "../views/ResetPassword.vue"
+import auth from "../middleware/auth.js"
+import unauth from "../middleware/unauth.js"
 
 const routes = [
     {
@@ -15,32 +17,42 @@ const routes = [
     {
         path: "/main",
         name: "main",
-        component: VrMain
+        component: VrMain,
+        meta: { requiresAuth: true },
+        beforeEnter: auth
     },
 
     {
         path: "/login",
         name: "login",
-        component: VrLogin
+        component: VrLogin,
+        meta: { requiresAuth: true },
+        beforeEnter: unauth
     },
 
     {
         path: "/register",
         name: "register",
-        component: VrRegister
+        component: VrRegister,
+        meta: { requiresAuth: true },
+        beforeEnter: unauth
     },
 
     {
         path: "/forgot-password",
         name: "forgot-password",
-        component: VrForgotPassword
+        component: VrForgotPassword,
+        meta: { requiresAuth: true },
+        beforeEnter: unauth
     },
 
     {
         path: '/reset-password/:token',
         name: 'ResetPassword',
         component: VrResetPassword,
-        props: true
+        props: true,
+        meta: { requiresAuth: true },
+        beforeEnter: unauth
     }
 
 ];
