@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import auth from "./modules/auth.js";
+import forgotpassword from "./modules/forgotpassword.js";
 
 export default createStore({
     state: {},
@@ -7,6 +8,7 @@ export default createStore({
     mutations: {},
     actions: {},
     modules: {
-        auth
+        auth,
+        forgotpassword
     }
 });

@@ -3,37 +3,41 @@ import VrErrors from '../components/Errors.vue'
 import VrLoader from '../components/Loader.vue'
 
 export default {
-    name: 'VrRegister',
+    name: 'VrResetPassword',
     components: {
         VrErrors,
         VrLoader,
     },
 
+    props: {
+        token: {
+            type: String,
+            required: true,
+        }
+    },
+
     data() {
         return {
-            name: '',
-            surname: '',
-            email: '',
-            login: '',
             password: '',
-            confirmpassword: '',
-            emailError: '',
+            password_confirmation: '',
             passwordError: false,
-            disableButtons: ''
+            disableButtons: '',
+            email: '',
+            emailError: '',
         }
     },
 
     methods: {
         onSubmit() {
-            if (this.confirmpassword === this.password) {
-                this.$store.dispatch('register', {
-                    name: this.name,
-                    surname: this.surname,
+            if (this.password_confirmation === this.password) {
+                console.log(this.token)
+                this.$store.dispatch('resetPassword', {
                     email: this.email,
-                    login: this.login,
+                    password_confirmation: this.password_confirmation,
                     password: this.password,
+                    token: this.token
                 }).then(() => {
-                    this.$router.push({ name: 'main' })
+                    this.$router.push({ name: "login"});
                 })
             }
         },
@@ -52,11 +56,11 @@ export default {
         },
 
         validatePassword() {
-            if (!this.password && !this.confirmpassword) {
+            if (!this.password && !this.password_confirmation) {
                 this.passwordError = false
                 this.errorPasswordFlag(this.passwordError)
                 this.disableButtons = true
-            } else if (this.password !== this.confirmpassword) {
+            } else if (this.password !== this.password_confirmation) {
                 this.passwordError = true
                 this.errorPasswordFlag(this.passwordError)
                 this.disableButtons = true
@@ -80,7 +84,7 @@ export default {
     },
 
     mounted() {
-        this.validateEmail()
+        this.validatePassword()
         this.validatePassword()
     },
 
@@ -111,26 +115,11 @@ export default {
         <vr-loader v-if='isLoading'></vr-loader>
         <div class='main-form'>
             <div class='form-block'>
-                <p class='form-block-title'>Sign Up</p>
+                <p class='form-block-title'>Reset Password</p>
                 <div class='error-block'>
-                    <vr-errors v-if='validationErrors'
-                               :validation-errors='validationErrors'
-                               class='errors'></vr-errors>
                 </div>
                 <form action='/' @submit.prevent='onSubmit'>
                     <div class='input-wrapper'>
-                        <div class='input-wrapper-item'>
-                            <label class='input-type'>
-                                <input required class='input-type-item' type='text' placeholder='Name' v-model='name'>
-                            </label>
-                        </div>
-
-                        <div class='input-wrapper-item'>
-                            <label class='input-type'>
-                                <input required class='input-type-item' type='text' placeholder='Surname'
-                                       v-model='surname'>
-                            </label>
-                        </div>
 
                         <div class='input-wrapper-item'>
                             <div class='email-container'>
@@ -140,12 +129,6 @@ export default {
                                 </label>
                                 <div v-if='emailError' class='error-message'><p>{{ emailError }}</p></div>
                             </div>
-                        </div>
-
-                        <div class='input-wrapper-item'>
-                            <label class='input-type'>
-                                <input required class='input-type-item' type='text' placeholder='Login' v-model='login'>
-                            </label>
                         </div>
 
                         <div class='input-wrapper-item'>
@@ -162,7 +145,7 @@ export default {
                                 <label class='input-type'>
                                     <input required class='input-type-item' type='password'
                                            placeholder='Confirm password'
-                                           v-model='confirmpassword' @input='validatePassword'>
+                                           v-model='password_confirmation' @input='validatePassword'>
                                 </label>
                                 <div class='tooltip'>
                                     <div class='round'><span>!</span></div>
@@ -175,12 +158,6 @@ export default {
 
                         <input :disabled='isSubmitting || disableButton' class='input-submit' type='submit'
                                value='Register'>
-
-                        <div class='offer'>
-                            <div class='offer'>
-                                <router-link to='forgot-password'> Forgot password?</router-link>
-                            </div>
-                        </div>
                     </div>
                 </form>
 

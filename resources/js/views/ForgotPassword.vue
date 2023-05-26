@@ -1,46 +1,65 @@
 <script>
-import VrErrors from '../components/Errors.vue'
 import VrLoader from '../components/Loader.vue'
+import VrErrors from '../components/Errors.vue'
 
 export default {
-    name: 'VrRegister',
+    name: 'VrForgotPassword',
     components: {
         VrErrors,
-        VrLoader,
+        VrLoader
     },
 
     data() {
         return {
-            login: '',
-            password: '',
-            disableButtons: '',
+            email: '',
+            emailError: '',
+            disableButtons: ''
         }
     },
 
     methods: {
         onSubmit() {
-            this.$store.dispatch('login', {
-                login: this.login,
-                password: this.password,
-            }).then(() => {
-                this.$router.push({ name: 'main' })
-            })
-
+            if (this.email) {
+                this.$store.dispatch('sendEmail', {
+                    email: this.email
+                }).then(() => {
+                    this.$router.push({ name: login});
+                })
+            }
         },
+
+        validateEmail() {
+            if (!this.email) {
+                this.emailError = ''
+                this.disableButtons = true
+            } else if (!this.email.includes('@')) {
+                this.emailError = 'Invalid email format'
+                this.disableButtons = true
+            } else {
+                this.emailError = ''
+                this.disableButtons = false
+            }
+        },
+    },
+
+    mounted() {
+        this.validateEmail()
     },
 
     computed: {
         isSubmitting() {
-            return this.$store.state.auth.isSubmitting
-        },
-        validationErrors() {
-            return this.$store.state.auth.validationErrors
+            return this.$store.state.forgotpassword.isSubmitting
         },
         isLoading() {
-            return this.$store.state.auth.isLoading
+            return this.$store.state.forgotpassword.isLoading
+        },
+        disableButton() {
+            return this.disableButtons
+        },
+        responseMessage() {
+            return this.$store.state.forgotpassword.responseMessage
         }
     },
-
     beforeRouteLeave(to, from, next) {
         this.$store.dispatch('resetVariables');
         next();
@@ -53,35 +72,26 @@ export default {
         <vr-loader v-if='isLoading'></vr-loader>
         <div class='main-form'>
             <div class='form-block'>
-                <p class='form-block-title'>Sign In</p>
+                <p class='form-block-title'>Forgot password?</p>
                 <div class='error-block'>
-                    <vr-errors v-if='validationErrors'
-                               :validation-errors='validationErrors'
-                               class='errors'></vr-errors>
+                </div>
+                <div class='successMessage'>
+                    <p v-if='responseMessage'>{{responseMessage}}</p>
                 </div>
                 <form action='/' @submit.prevent='onSubmit'>
                     <div class='input-wrapper'>
                         <div class='input-wrapper-item'>
-                            <label class='input-type'>
-                                <input required class='input-type-item' type='text' placeholder='Login' v-model='login'>
-                            </label>
-                        </div>
-
-                        <div class='input-wrapper-item'>
                             <div class='email-container'>
                                 <label class='input-type'>
-                                    <input required class='input-type-item' type='password' placeholder='Password'
-                                           v-model='password'>
+                                    <input required class='input-type-item' type='email' placeholder='Email'
+                                           v-model='email' @input='validateEmail'>
                                 </label>
+                                <div v-if='emailError' class='error-message'><p>{{ emailError }}</p></div>
                             </div>
                         </div>
 
-                        <input :disabled='isSubmitting' class='input-submit' type='submit'
-                               value='Login'>
-
-                        <div class='offer'>
-                            <router-link to='forgot-password'> Forgot password?</router-link>
-                        </div>
+                        <input :disabled='isSubmitting || disableButton' class='input-submit' type='submit'
+                               value='Send'>
                     </div>
                 </form>
 
@@ -116,8 +126,14 @@ export default {
     font-size: 32px;
 }
 
-.form-block form {
-    margin-top: 10px;
+.form-block-title {
+    text-align: center;
+    font-size: 32px;
+}
+
+.successMessage {
+    font-size: 14px;
+    color: green;
 }
 
 .input-wrapper {
@@ -136,9 +152,19 @@ export default {
     display: flex;
 }
 
+.error-message {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    white-space: nowrap;
+    padding-left: 10px;
+    color: #a61717;
+}
+
 .error-message p { /* 2 */
     margin-top: 15px;
 }
+
 
 .round span {
     font-size: 15px;
@@ -205,5 +231,5 @@ export default {
 .offer a:hover {
     color: #a61717;
 }
-
 </style>
+

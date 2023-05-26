@@ -15,7 +15,7 @@
             @enderror
             <input id="password" type="password" class='inp form-group @error('password') is-invalid @enderror' placeholder='Пароль' name="password" required autocomplete="new-password">
 
-            <input id="password-confirm" class='inp form-group' type='password' name='confirmPassword' placeholder='Подтвердите пароль'>
+            <input id="password-confirm" type='password' class='inp form-group' placeholder='Подтвердите пароль' name="password_confirmation" required autocomplete="new-password">
             <button class='myBtn'>Изменить</button>
             @error('password')
             <span class="invalid-feedback" role="alert">

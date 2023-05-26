@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PageForgotPassword;
+use App\Http\Controllers\Api\PageResetPassword;
 use App\Http\Controllers\Api\RedirectForgotPasswordController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\RoleController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VerificationEmail;
 use App\Http\Controllers\Api\VrDeviceController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\PageForgotPasswordController;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -58,3 +61,6 @@ Route::get('/redirect-to-forgot-password', [RedirectForgotPasswordController::cl
 
 Route::post('register', [AuthController::class, 'registerUser']);
 Route::post('login', [AuthController::class, 'loginUser']);
+
+Route::apiResource('/forgot-password', PageForgotPassword::class);
+Route::post('/reset-password-action', [PageForgotPasswordController::class, 'resetEmailForgotPassword']);

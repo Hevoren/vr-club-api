@@ -1,14 +1,16 @@
 <script>
 
-import VrTopBar from '@/components/TopBar.vue'
-import VrMain from '@/views/Main.vue'
-import VrFooter from '@/components/Footer.vue'
+import VrTopBar from '../js/components/TopBar.vue'
+import VrMain from '../js/views/Main.vue'
+import VrFooter from '../js/components/Footer.vue'
+import VrResetPassword from '../js/views/ResetPassword.vue'
 export default {
     name: 'AppComponent',
     components: {
         VrFooter,
         VrMain,
-        VrTopBar
+        VrTopBar,
+        VrResetPassword
     }
 }
 </script>

@@ -1,8 +1,10 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import VrMain from "../views/Main.vue"
 import VrLogin from "../views/Login.vue"
 import VrRegister from "../views/Register.vue"
+import VrForgotPassword from "../views/ForgotPassword.vue"
+import VrResetPassword from "../views/ResetPassword.vue"
 
 const routes = [
     {
@@ -28,10 +30,23 @@ const routes = [
         component: VrRegister
     },
 
+    {
+        path: "/forgot-password",
+        name: "forgot-password",
+        component: VrForgotPassword
+    },
+
+    {
+        path: '/reset-password/:token',
+        name: 'ResetPassword',
+        component: VrResetPassword,
+        props: true
+    }
+
 ];
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes,
 });
 
