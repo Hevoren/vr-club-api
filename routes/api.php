@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\StatusController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VerificationEmail;
 use App\Http\Controllers\Api\VrDeviceController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Auth\Events\Registered;
@@ -49,23 +50,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['admin
     Route::apiResource('users', UserController::class);
 
 });
-Route::get('/email/verify', function (Request $request) {
-    $user = User::where('login', $request->login)->first();
-    if ($user->email_verified_at) {
-        return response()->json(['message' => 'You already successfully verified account']);
-    }
-})->name('verification.notice');
-
-Route::get('/email/verify/resend', function (Request $request) {
-    $user = User::where('login', $request->login)->first();
-    if (!$user->email_verified_at) {
-        $user->sendEmailVerificationNotification();
-        return response()->json(['message' => 'On your email resend verification link']);
-    }
-    return response()->json(['message' => 'You already successfully verified account']);
-})->name('verification.again');
+Route::get('/email/verify', [VerificationEmail::class, 'checkStatusVerification'])->name('verification.notice');
+Route::get('/email/verify/resend', [VerificationEmail::class, 'resendVerificationEmail'])->name('verification.again');
+Route::get('/email/verify/{id}/{hash}', [VerificationEmail::class, 'verifyUser'])->middleware('signed')->name('verification.verify');
 
 Route::get('/redirect-to-forgot-password', [RedirectForgotPasswordController::class, 'redirectToPage']);
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyUser'])->middleware('signed')->name('verification.verify');
+
 Route::post('register', [AuthController::class, 'registerUser']);
 Route::post('login', [AuthController::class, 'loginUser']);

@@ -71,8 +71,8 @@ export default {
                         </div>
                         <input :disabled='isSubmitting' class='input-submit' type='submit'
                                value='Login'>
-                        <div>
-                            <a href='https://localhost:8080/'>
+                        <div class='offer'>
+                            <a href='http://127.0.0.1:8000/api/redirect-to-forgot-password'>
                                 Forgot password?
                             </a>
                         </div>
@@ -105,11 +105,6 @@ export default {
     max-width: 350px;
 }
 
-.form-block-title {
-    text-align: center;
-    font-size: 32px;
-}
-
 .form-block form {
     margin-top: 10px;
 }
@@ -130,82 +125,13 @@ export default {
     display: flex;
 }
 
-.error-message {
-    position: absolute;
-    left: 100%;
-    top: 0;
-    white-space: nowrap;
-    padding-left: 10px;
-    color: #a61717;
-}
-
 .error-message p { /* 2 */
     margin-top: 15px;
-}
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.tooltip-text {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 10px;
-}
-
-.tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
-}
-
-.round {
-    margin-top: 15px;
-    margin-left: 10px;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    border: 2px solid white;
-    background: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
 }
 
 .round span {
     font-size: 15px;
     color: white;
-}
-
-.round.active {
-    box-shadow: 0 0 15px red;
-    border: 2px solid #a61717;
-    color: red;
-}
-
-.round:hover + .tooltip-text,
-.tooltip-text:hover {
-    visibility: visible;
-    opacity: 1;
 }
 
 .input-type {
@@ -254,6 +180,19 @@ export default {
 
 .input-submit:hover {
     background-color: #720f0f;
+}
+
+.offer {
+    margin: 0;
+    margin-top: 15px;
+}
+
+.offer a {
+    transition: .5s;
+}
+
+.offer a:hover {
+    color: #a61717;
 }
 
 </style>

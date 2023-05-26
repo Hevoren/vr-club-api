@@ -77,7 +77,7 @@ const actions = {
                     console.log(result)
                     if (result.response.status === 422) {
                         context.commit("loginFailure", {
-                            gg: ["Email or password incorrect"],
+                            error: ["Email or password incorrect"],
                         });
                     }
                 });

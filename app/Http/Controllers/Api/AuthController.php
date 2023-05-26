@@ -80,18 +80,7 @@ class AuthController extends Controller
     }
 
 
-    public function verifyUser(Request $request)
-    {
-        $user = User::find($request->id);
 
-        if ($user && hash_equals($request->hash, sha1($user->getEmailForVerification()))) {
-            $user->markEmailAsVerified();
-            $request->user = $user;
-            return response()->json(['message' => 'Email verified']);
-        } else {
-            return response()->json(['message' => 'Error for verification email']);
-        }
-    }
 
     /**
      * Display a listing of the resource.
