@@ -26,7 +26,7 @@ const routes = [
         path: "/register",
         name: "register",
         component: VrRegister
-    }
+    },
 
 ];
 

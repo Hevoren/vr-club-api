@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RedirectForgotPasswordController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\StatusController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VrDeviceController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,7 +56,7 @@ Route::get('/email/verify', function (Request $request) {
     }
 })->name('verification.notice');
 
-Route::get('/email/verify/again', function (Request $request) {
+Route::get('/email/verify/resend', function (Request $request) {
     $user = User::where('login', $request->login)->first();
     if (!$user->email_verified_at) {
         $user->sendEmailVerificationNotification();
@@ -63,6 +65,7 @@ Route::get('/email/verify/again', function (Request $request) {
     return response()->json(['message' => 'You already successfully verified account']);
 })->name('verification.again');
 
+Route::get('/redirect-to-forgot-password', [RedirectForgotPasswordController::class, 'redirectToPage']);
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyUser'])->middleware('signed')->name('verification.verify');
 Route::post('register', [AuthController::class, 'registerUser']);
 Route::post('login', [AuthController::class, 'loginUser']);

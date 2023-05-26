@@ -13,8 +13,8 @@ export default {
             </div>
             <div class='header-menu'>
                 <div class='header-menu-item'>
-                    <router-link to='login'>Sign In</router-link>
-                    <router-link to='register'>Sign Up</router-link>
+                    <router-link to='login' exact active-class="active">Sign In</router-link>
+                    <router-link to='register' exact active-class="active">Sign Up</router-link>
                 </div>
             </div>
         </div>
@@ -66,6 +66,10 @@ export default {
     }
 
     .header-menu a:hover {
+        color: #eb2403;
+    }
+
+    .header-menu a.active {
         color: #eb2403;
     }
 </style>

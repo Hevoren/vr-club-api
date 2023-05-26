@@ -31,7 +31,20 @@ const mutations = {
         state.isSubmitting = false
         state.validationErrors = payload
         state.isLoading = false
-    }
+    },
+    loginStart(state) {
+        state.isSubmitting = true;
+        state.validationErrors = null;
+    },
+    loginSuccess(state, payload) {
+        state.isSubmitting = false;
+        state.currentUser = payload;
+        state.isLoggedIn = true;
+    },
+    loginFailure(state, payload) {
+        state.isSubmitting = false;
+        state.validationErrors = payload;
+    },
 }
 
 const actions = {
@@ -41,15 +54,34 @@ const actions = {
             authApi
                 .register(credentials)
                 .then((response) => {
-                    console.log(response)
                     context.commit('registerSuccess', credentials)
                     resolve(response.data.user)
                 })
                 .catch((result) => {
-                    console.log(result.response.data.errors)
                     context.commit('registerFailure', result.response.data.errors)
                 })
         })
+    },
+    login(context, credentials) {
+        return new Promise((resolve) => {
+            context.commit("loginStart");
+            authApi
+                .login(credentials)
+                .then((response) => {
+                    credentials.token = response.data.bearer;
+                    context.commit("loginSuccess", credentials);
+                    setItem("bearer", response.data.bearer);
+                    resolve();
+                })
+                .catch((result) => {
+                    console.log(result)
+                    if (result.response.status === 422) {
+                        context.commit("loginFailure", {
+                            gg: ["Email or password incorrect"],
+                        });
+                    }
+                });
+        });
     },
 }
 

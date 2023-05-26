@@ -1,7 +1,6 @@
 <script>
 import VrErrors from '../components/Errors.vue'
 import VrLoader from '../components/Loader.vue'
-import getAltAxis from '@popperjs/core/lib/utils/getAltAxis.js'
 
 export default {
     name: 'VrRegister',
@@ -107,7 +106,6 @@ export default {
         <vr-loader v-if='isLoading'></vr-loader>
         <div class='main-form'>
             <div class='form-block'>
-                <p class='form-block-title'>Sign Up</p>
                 <div class='error-block'>
                     <vr-errors v-if='validationErrors'
                                :validation-errors='validationErrors'
