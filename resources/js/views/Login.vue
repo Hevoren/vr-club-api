@@ -42,7 +42,7 @@ export default {
     },
 
     beforeRouteLeave(to, from, next) {
-        this.$store.dispatch('resetVariables');
+        this.$store.commit('resetVariablesStart');
         next();
     }
 }

@@ -1,5 +1,5 @@
 import interactionApi from '../../api/interaction.js'
-import { setItem } from '../../helpers/saveLocStorage.js'
+import { getItem, setItem } from '../../helpers/saveLocStorage.js'
 
 const state = {
     isSubmitting: false,

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('role_id')->default(2);
             $table->foreign('role_id')->references('role_id')->on('roles');
             $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

@@ -177,7 +177,7 @@ export default {
 
                         <div class='offer'>
                             <div class='offer'>
-                                <router-link to='forgot-password'> Forgot password?</router-link>
+                                <router-link to='login'>Already registered?</router-link>
                             </div>
                         </div>
                     </div>

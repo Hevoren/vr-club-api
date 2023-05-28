@@ -8,12 +8,7 @@ const resetPassword = (credentials) => {
     return axios.post("/reset-password-action", credentials);
 }
 
-const getResetPassword = (token) => {
-    return axios.get(token);
-}
-
 export default {
     forgotPassword,
     resetPassword,
-    getResetPassword
 };

@@ -1,6 +1,24 @@
 <script>
+import VrLoader from "../components/Loader.vue"
 export default {
     name: "VrTopVar",
+    components : {
+        VrLoader
+    },
+
+    computed: {
+        isLoggedIn() {
+            return this.$store.state.auth.isLoggedIn
+        },
+        isLoading() {
+            return this.$store.state.auth.isLoading
+        }
+    },
+    methods: {
+        exit() {
+            this.$store.dispatch("exit");
+        },
+    },
 
 }
 
@@ -10,14 +28,16 @@ export default {
 
 <template>
     <nav class='header-template'>
+        <vr-loader v-if='isLoading'></vr-loader>
         <div class='header'>
             <div class='header-logo'>
                 <router-link to="main"><p>VR CLUB <span>API</span></p></router-link>
             </div>
             <div class='header-menu'>
                 <div class='header-menu-item'>
-                    <router-link to='login' exact active-class="active">Sign In</router-link>
-                    <router-link to='register' exact active-class="active">Sign Up</router-link>
+                    <router-link to='login' exact active-class="active" v-if='!isLoggedIn'>Sign In</router-link>
+                    <router-link to='register' exact active-class="active" v-if='!isLoggedIn'>Sign Up</router-link>
+                    <router-link to='login' @click="exit" v-if='isLoggedIn'>Exit</router-link>
                 </div>
             </div>
         </div>

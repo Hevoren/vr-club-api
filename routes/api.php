@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PageForgotPassword;
@@ -43,6 +44,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:
     Route::apiResource('rooms', RoomController::class);
     Route::apiResource('vrdevices', VrDeviceController::class);
     Route::apiResource('requests', UserRequestController::class);
+    Route::apiResource('change-password', ChangePasswordController::class);
     Route::post('logout', [AuthController::class, 'logoutUser']);
 });
 
@@ -57,7 +59,8 @@ Route::get('/email/verify', [VerificationEmail::class, 'checkStatusVerification'
 Route::get('/email/verify/resend', [VerificationEmail::class, 'resendVerificationEmail'])->name('verification.again');
 Route::get('/email/verify/{id}/{hash}', [VerificationEmail::class, 'verifyUser'])->middleware('signed')->name('verification.verify');
 
-Route::get('/redirect-to-forgot-password', [RedirectForgotPasswordController::class, 'redirectToPage']);
+Route::get('/redirect-to-forgot-passwor.
+', [RedirectForgotPasswordController::class, 'redirectToPage']);
 
 Route::post('register', [AuthController::class, 'registerUser']);
 Route::post('login', [AuthController::class, 'loginUser']);
