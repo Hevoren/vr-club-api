@@ -23,7 +23,7 @@ export default {
                 this.$store.dispatch('sendEmail', {
                     email: this.email
                 }).then(() => {
-                    this.$router.push({ name: login});
+                    this.$router.push({ name: "login"});
                 })
             }
         },

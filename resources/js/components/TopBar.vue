@@ -16,7 +16,9 @@ export default {
     },
     methods: {
         exit() {
-            this.$store.dispatch("exit");
+            this.$store.dispatch("exit").then(() => {
+                this.$router.push({ name: 'login' })
+            })
         },
     },
 
