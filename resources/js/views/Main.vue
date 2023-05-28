@@ -16,7 +16,26 @@ export default {
             showing: false,
             selected: 'GET',
             disableButtons: false,
-            apiEndPoint: ''
+            apiEndPoint: '',
+            computers: {
+                graphic_card: '',
+                processor: '',
+                ram: ''
+            },
+            games: {
+                game: '',
+                age_limit: '',
+                duration: '',
+                genre: '',
+                price: ''
+            },
+            reservations: {
+                login: localStorage.getItem('login'),
+                reservation_time: '',
+                peoples: '',
+                game_id: '',
+                room_id: ''
+            }
         }
     },
 
@@ -24,9 +43,30 @@ export default {
         onSubmit() {
             const apiEndPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length);
             this.apiEndPoint = apiEndPoint.startsWith('i') ? apiEndPoint.substring(1) : apiEndPoint;
+            const lastChar = this.apiEndPoint.slice(-1);
 
-            if (this.apiEndPoint === '/computers' && this.selected === 'GET') {
-                this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+            if (this.selected === 'GET') {
+                if (this.apiEndPoint === '/computers' || `/computers/${lastChar}`) {
+                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+                } else if (this.apiEndPoint === '/games' || `/games/${lastChar}`) {
+                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+                } else if (this.apiEndPoint === '/reservations' || `/reservaions/${lastChar}`) {
+                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+                } else if (this.apiEndPoint === '/rooms' || `/rooms/${lastChar}`) {
+                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+                } else if (this.apiEndPoint === '/vrdevices' || `/vrdevice/${lastChar}`) {
+                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+                } else if (this.apiEndPoint === '/requests' || `/requests/${lastChar}`) {
+                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+                }
+            } if (this.selected === 'POST') {
+                if (this.apiEndPoint === '/computers' || this.apiEndPoint === '/computers/') {
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.computers })
+                } else if (this.apiEndPoint === '/games' || this.apiEndPoint === '/games/') {
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.games })
+                } else if (this.apiEndPoint === '/reservations' || this.apiEndPoint === '/reservations/') {
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.reservations })
+                }
             }
         },
         chekUrl() {
@@ -49,9 +89,7 @@ export default {
             }
         },
         showUrlsGuide(){
-            console.log('showingBef', this.showing)
             this.showing = !this.showing
-            console.log('showingAft', this.showing)
         }
     },
 
@@ -81,6 +119,15 @@ export default {
         this.$store.dispatch('resetVariables')
         next()
     },
+
+    watch: {
+        url(newValue, oldValue) {
+            const apiEndPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length);
+            this.apiEndPoint = apiEndPoint.startsWith('i') ? apiEndPoint.substring(1) : apiEndPoint;
+            const lastChar = this.apiEndPoint.slice(-1);
+            console.log(apiEndPoint)
+        },
+    }
 }
 </script>
 
@@ -188,10 +235,62 @@ export default {
                 </div>
                 <div class='enter'>
                     <div class='enter-item-1'>
-
+                        <div v-if='selected === "POST"'>
+                            {
+                            <div class='request-action'>
+                                <label for='gp' v-if='(apiEndPoint === "/computers" || apiEndPoint === "/computers/")'>"graphic_card":
+                                    <input id='gp' v-model='computers.graphic_card'>
+                                </label>
+                                <label for='proc' v-if='(apiEndPoint === "/computers" || apiEndPoint === "/computers/")'>"processor":
+                                    <input id='proc' v-model='computers.processor'>
+                                </label>
+                                <label for='ram' v-if='(apiEndPoint === "/computers" || apiEndPoint === "/computers/")'>"ram":
+                                    <input id='ram' v-model='computers.ram'>
+                                </label>
+                                <label for='game' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"game":
+                                    <input id='game' v-model='games.game'>
+                                </label>
+                                <label for='age_limit' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"age_limit":
+                                    <input type='number' id='age_limit' v-model='games.age_limit'>
+                                </label>
+                                <label for='duration' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"duration":
+                                    <input type='number' id='duration' v-model='games.duration'>
+                                </label>
+                                <label for='genre' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"genre":
+                                    <input id='genre' v-model='games.genre'>
+                                </label>
+                                <label for='price' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"price":
+                                    <input type='number' id='price' v-model='games.price'>
+                                </label>
+                                <label for='reservation_time' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"reservation_time":
+                                    <input type='text' id='reservation_time' v-model='reservations.reservation_time'>
+                                </label>
+                                <label for='peoples' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"peoples":
+                                    <input type='number' id='peoples' v-model='reservations.peoples'>
+                                </label>
+                                <label for='game' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"game":
+                                    <input type='number' id='game' v-model='reservations.game_id'>
+                                </label>
+                                <label for='room_id' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"room_id":
+                                    <input type='number' id='room_id' v-model='reservations.room_id'>
+                                </label>
+                            </div>
+                            }
+                        </div>
                     </div>
+<!--                    "graphic_card": "graphic_card",-->
+<!--                    "processor": "processor",-->
+<!--                    "ram": "ram"-->
                     <div class='enter-item-2'>
-                            <pre>{{ responseData.data }}</pre>
+                        <div>
+                            <div v-if='!responseData.error'>
+                                <pre>{{ responseData.data }}</pre>
+                            </div>
+                            <div v-else>
+                                <pre>{{ responseData.error.data }}</pre>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -339,22 +438,43 @@ export default {
     height: 90%;
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 .enter-item-1 {
     width: 50%;
     height: 100%;
-    min-width: 400px;
     border-radius: 15px;
     border-right: 1px solid black;
+}
+
+.request-action {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.request-action label{
+    margin: 0;
+    margin-left: 30px;
+    margin-top: 10px;
+
+    float: left;
+}
+
+.request-action label input {
+    float: right;
+    text-indent: 10px;
+    margin-left: 10px;
+    background: none;
+    outline: none;
+    border: 1px solid red;
 }
 
 .enter-item-2 {
     width: 50%;
     height: 100%;
-    min-width: 400px;
-    overflow-y: auto;
-
+    overflow: auto;
 }
 
 .enter-item-2::-webkit-scrollbar-thumb {
@@ -368,12 +488,9 @@ export default {
 }
 
 .enter-item-2::-webkit-scrollbar {
-    width: 5px;
+    width: 10px;
+    height: 10px;
     background-color: #000;
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100%;
 }
 
 .input-wrapper-item {

@@ -35,11 +35,11 @@ class ReservationController extends Controller
     {
         if ($request->validated()) {
 
-            $user_id = $request->user_id;
+            $login = $request->login;
             $game_id = $request->game_id;
             $room_id = $request->room_id;
 
-            $user = User::where('user_id', $user_id)->first();
+            $user = User::where('login', $login)->first();
             $game = Game::where('game_id', $game_id)->first();
             $room = Room::where('room_id', $room_id)->first();
 
@@ -53,7 +53,7 @@ class ReservationController extends Controller
                 'peoples' => $request->peoples,
                 'game_id' => $request->game_id,
                 'room_id' => $request->room_id,
-                'user_id' => $request->user_id,
+                'user_id' => $user->user_id,
                 'all_price' => $all_price
             ]);
 

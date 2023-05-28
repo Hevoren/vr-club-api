@@ -24,7 +24,7 @@ class ReservationStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
+            'login' => 'required',
             'reservation_time' => 'required|date',
             'peoples' => 'required|integer',
             'game_id' => 'required|integer',

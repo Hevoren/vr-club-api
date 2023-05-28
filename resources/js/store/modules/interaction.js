@@ -28,12 +28,14 @@ const mutations = {
         state.validationErrors = payload
         state.isLoading = false
     },
+    // -----
     resetVariablesStart(state) {
         state.isSubmitting = false
         state.validationErrors = null
         state.isLoading = null
         state.responseMessage = null
     },
+    // -----
     resetPasswordStart(state) {
         state.isSubmitting = true
         state.isLoading = true
@@ -47,17 +49,32 @@ const mutations = {
         state.isSubmitting = false
         state.isLoading = false
     },
+    // -----
     getItemStart(state) {
         state.isLoading = true
+        state.error = null
         state.data = null
     },
     getItemSuccess(state, payload) {
-        console.log('mut', payload)
         state.data = payload
-        console.log('data', state.data)
         state.isLoading = false
     },
     getItemFailure(state, payload) {
+        state.error = payload
+        state.isLoading = false
+    },
+    // -----
+    setItemStart(state) {
+        state.isLoading = true
+        state.responseMessage = null
+        state.error = null
+        state.data = null
+    },
+    setItemSuccess(state, payload) {
+        state.data = payload
+        state.isLoading = false
+    },
+    setItemFailure(state, payload) {
         state.error = payload
         state.isLoading = false
     }
@@ -92,12 +109,10 @@ const actions = {
             interactionApi
                 .resetPassword(credentials)
                 .then((response) => {
-                    console.log(response)
                     context.commit('resetPasswordSuccess', response.data.message)
                     resolve(response)
                 })
                 .catch((result) => {
-                    console.log(result)
                     context.commit('resetPasswordFailure')
                 })
         })
@@ -114,7 +129,24 @@ const actions = {
                     resolve(response.data)
                 })
                 .catch((result) => {
-                    context.commit('getItemFailure', result);
+                    context.commit('getItemFailure', result.response);
+                })
+        })
+    },
+    setItems(context, { apiUrl, dataRequest }) {
+        console.log(dataRequest)
+        return new Promise((resolve) => {
+            context.commit('setItemStart');
+            const token = authState.state.currentUser.token;
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+            interactionApi
+                .setItem(apiUrl, dataRequest)
+                .then((response) => {
+                    context.commit('setItemSuccess', response.data)
+                    resolve(response.data)
+                })
+                .catch((result) => {
+                    context.commit('setItemFailure', result.response)
                 })
         })
     }

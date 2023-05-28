@@ -12,8 +12,13 @@ const getItem = (apiUrl) => {
     return axios.get(apiUrl);
 }
 
+const setItem = (apiUrl, dataRequest) => {
+    return axios.post(apiUrl, dataRequest);
+}
+
 export default {
     forgotPassword,
     resetPassword,
-    getItem
+    getItem,
+    setItem
 };
