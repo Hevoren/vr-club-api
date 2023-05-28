@@ -1,11 +1,15 @@
 import interactionApi from '../../api/interaction.js'
+import authState from "../modules/auth.js";
 import { getItem, setItem } from '../../helpers/saveLocStorage.js'
+import data from 'bootstrap/js/src/dom/data.js'
 
 const state = {
     isSubmitting: false,
     validationErrors: null,
     isLoading: null,
-    responseMessage: null
+    responseMessage: null,
+    data: null,
+    error: null,
 }
 
 const mutations = {
@@ -41,6 +45,20 @@ const mutations = {
     },
     resetPasswordFailure(state) {
         state.isSubmitting = false
+        state.isLoading = false
+    },
+    getItemStart(state) {
+        state.isLoading = true
+        state.data = null
+    },
+    getItemSuccess(state, payload) {
+        console.log('mut', payload)
+        state.data = payload
+        console.log('data', state.data)
+        state.isLoading = false
+    },
+    getItemFailure(state, payload) {
+        state.error = payload
         state.isLoading = false
     }
 
@@ -81,6 +99,22 @@ const actions = {
                 .catch((result) => {
                     console.log(result)
                     context.commit('resetPasswordFailure')
+                })
+        })
+    },
+    getItems(context, { apiUrl }) {
+        return new Promise((resolve) => {
+            context.commit('getItemStart');
+            const token = authState.state.currentUser.token;
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+            interactionApi
+                .getItem(apiUrl)
+                .then((response) => {
+                    context.commit('getItemSuccess', response.data);
+                    resolve(response.data)
+                })
+                .catch((result) => {
+                    context.commit('getItemFailure', result);
                 })
         })
     }

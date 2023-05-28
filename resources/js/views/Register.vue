@@ -68,7 +68,6 @@ export default {
         },
 
         errorPasswordFlag(passwordError) {
-            console.log(passwordError)
             const passwordInput = document.getElementById('password-input')
             const round = document.querySelector('.round')
             if (passwordError === true) {

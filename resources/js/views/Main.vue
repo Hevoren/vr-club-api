@@ -1,19 +1,80 @@
 <script>
+import VrErrors from '../components/Errors.vue'
+import VrLoader from '../components/Loader.vue'
+
 export default {
     name: 'VrMain',
+    components: {
+        VrErrors,
+        VrLoader,
+    },
+
     data () {
         return {
-            url: 'http://localhost:8080/api',
+            url: 'http://localhost:8000/api',
+            urlError: false,
             showing: false,
+            selected: 'GET',
+            disableButtons: false,
+            apiEndPoint: ''
         }
     },
 
     methods: {
+        onSubmit() {
+            const apiEndPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length);
+            this.apiEndPoint = apiEndPoint.startsWith('i') ? apiEndPoint.substring(1) : apiEndPoint;
+
+            if (this.apiEndPoint === '/computers' && this.selected === 'GET') {
+                this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
+            }
+        },
+        chekUrl() {
+            if (this.url.includes('http://localhost:8000/api')){
+                this.urlError = false
+                this.urlErrorFlag(this.urlError)
+                this.disableButtons = false
+            } else {
+                this.urlError = true
+                this.urlErrorFlag(this.urlError)
+                this.disableButtons = true
+            }
+        },
+        urlErrorFlag(urlError){
+            const round = document.querySelector('.round')
+            if (urlError === true) {
+                round.classList.add('active')
+            } else if (urlError === false) {
+                round.classList.remove('active')
+            }
+        },
         showUrlsGuide(){
             console.log('showingBef', this.showing)
             this.showing = !this.showing
             console.log('showingAft', this.showing)
         }
+    },
+
+    computed: {
+        isSubmitting() {
+            return this.$store.state.auth.isSubmitting
+        },
+        validationErrors() {
+            return this.$store.state.auth.validationErrors
+        },
+        isLoading() {
+            return this.$store.state.auth.isLoading
+        },
+        disableButton() {
+            return this.disableButtons
+        },
+        responseData () {
+            return this.$store.state.interaction
+        }
+    },
+
+    mounted() {
+        this.chekUrl()
     },
 
     beforeRouteLeave(to, from, next) {
@@ -91,10 +152,10 @@ export default {
             <div class='first-test-block'>
                 <div class='adress-bar'>
                     <div class='bar'>
-                        <form>
+                        <form action='/' @submit.prevent='onSubmit'>
                             <div class='input-wrapper-item'>
                                 <div class='request'>
-                                    <select>
+                                    <select v-model='selected'>
                                         <option style='color: green'>GET</option>
                                         <option style='color: yellow'>POST</option>
                                         <option style='color: blue'>PUT</option>
@@ -106,12 +167,17 @@ export default {
                                 <div class='url-container'>
                                     <label class='input-type'>
                                         <input required class='input-type-item' type='text' placeholder='url'
-                                               v-model='url'>
+                                               v-model='url' @input='chekUrl'>
                                     </label>
+                                    <div class='tooltip'>
+                                        <div class='round'><span>!</span></div>
+                                        <div class='tooltip-text'>The URL must contain "http://localhost:8000/api/"
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class='submit-button'>
-                                    <input class='input-submit' type='submit'
+                                    <input :disabled='disableButton' class='input-submit' type='submit'
                                            value='Send'>
                                 </div>
 
@@ -125,7 +191,7 @@ export default {
 
                     </div>
                     <div class='enter-item-2'>
-
+                            <pre>{{ responseData.data }}</pre>
                     </div>
                 </div>
             </div>
@@ -279,14 +345,35 @@ export default {
     width: 50%;
     height: 100%;
     min-width: 400px;
-    //border: 2px solid green; /* зеленый цвет */
+    border-radius: 15px;
+    border-right: 1px solid black;
 }
 
 .enter-item-2 {
     width: 50%;
     height: 100%;
     min-width: 400px;
-    //border: 2px solid red;
+    overflow-y: auto;
+
+}
+
+.enter-item-2::-webkit-scrollbar-thumb {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 5px;
+}
+
+.enter-item-2::-webkit-scrollbar-thumb:hover {
+    background-color: #9d9d9d;
+}
+
+.enter-item-2::-webkit-scrollbar {
+    width: 5px;
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
 }
 
 .input-wrapper-item {
@@ -332,6 +419,71 @@ export default {
 
 .input-type:focus {
     box-shadow: none;
+}
+
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 150px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 10px;
+    margin-left: -70px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 10px;
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.round {
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.round span {
+    font-size: 15px;
+    color: white;
+}
+
+.round.active {
+    box-shadow: 0 0 15px red;
+    border: 2px solid #a61717;
+    color: red;
+}
+
+.round:hover + .tooltip-text,
+.tooltip-text:hover {
+    visibility: visible;
+    opacity: 1;
 }
 
 .request {

@@ -48,16 +48,16 @@ export default {
 
     computed: {
         isSubmitting() {
-            return this.$store.state.forgotpassword.isSubmitting
+            return this.$store.state.interaction.isSubmitting
         },
         isLoading() {
-            return this.$store.state.forgotpassword.isLoading
+            return this.$store.state.interaction.isLoading
         },
         disableButton() {
             return this.disableButtons
         },
         responseMessage() {
-            return this.$store.state.forgotpassword.responseMessage
+            return this.$store.state.interaction.responseMessage
         }
     },
     beforeRouteLeave(to, from, next) {
