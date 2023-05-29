@@ -51,31 +51,73 @@ const mutations = {
     },
     // -----
     getItemStart(state) {
+        state.isSubmitting = true
         state.isLoading = true
         state.error = null
         state.data = null
     },
     getItemSuccess(state, payload) {
         state.data = payload
+        state.isSubmitting = false
         state.isLoading = false
     },
     getItemFailure(state, payload) {
         state.error = payload
+        state.isSubmitting = false
         state.isLoading = false
     },
     // -----
     setItemStart(state) {
         state.isLoading = true
+        state.isSubmitting = true
         state.responseMessage = null
         state.error = null
         state.data = null
     },
     setItemSuccess(state, payload) {
+        state.isSubmitting = false
         state.data = payload
         state.isLoading = false
     },
     setItemFailure(state, payload) {
+        state.isSubmitting = false
         state.error = payload
+        state.isLoading = false
+    },
+    // -----
+    patchItemStart(state) {
+        state.isLoading = true
+        state.isSubmitting = true
+        state.responseMessage = null
+        state.error = null
+        state.data = null
+    },
+    patchItemSuccess(state, payload) {
+        state.data = payload
+        state.isSubmitting = false
+        state.isLoading = false
+    },
+    patchItemFailure(state, payload) {
+        state.error = payload
+        state.isSubmitting = false
+        state.isLoading = false
+    },
+    // -----
+    putItemStart(state) {
+        state.isLoading = true
+        state.isSubmitting = true
+        state.responseMessage = null
+        state.error = null
+        state.data = null
+    },
+    putItemSuccess(state, payload) {
+        state.data = payload
+        state.isSubmitting = false
+        state.isLoading = false
+    },
+    putItemFailure(state, payload) {
+        state.error = payload
+        state.isSubmitting = false
         state.isLoading = false
     }
 
@@ -83,18 +125,15 @@ const mutations = {
 
 const actions = {
     sendEmail(context, credentials) {
-        console.log(credentials)
         return new Promise((resolve) => {
             context.commit('forgotpasswordStart')
             interactionApi
                 .forgotPassword(credentials)
                 .then((response) => {
-                    console.log(response)
                     context.commit('forgotpasswordSuccess', response.data.message)
                     resolve(response)
                 })
                 .catch((result) => {
-                    console.log(result);
                     context.commit('forgotpasswordFailure', result)
                 })
         })
@@ -104,7 +143,6 @@ const actions = {
     },
     resetPassword(context, credentials) {
         return new Promise((resolve) => {
-            console.log(credentials)
             context.commit('resetPasswordStart')
             interactionApi
                 .resetPassword(credentials)
@@ -134,7 +172,6 @@ const actions = {
         })
     },
     setItems(context, { apiUrl, dataRequest }) {
-        console.log(dataRequest)
         return new Promise((resolve) => {
             context.commit('setItemStart');
             const token = authState.state.currentUser.token;
@@ -149,8 +186,39 @@ const actions = {
                     context.commit('setItemFailure', result.response)
                 })
         })
+    },
+    patchItems(context, { apiUrl, dataRequest }) {
+        return new Promise((resolve) => {
+            context.commit('patchItemStart');
+            const token = authState.state.currentUser.token;
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+            interactionApi
+                .patchItem(apiUrl, dataRequest)
+                .then((response) => {
+                    context.commit('patchItemSuccess', response.data)
+                    resolve(response.data)
+                })
+                .catch((result) => {
+                    context.commit('patchItemFailure', result.response)
+                })
+        })
+    },
+    putItems(context, { apiUrl, dataRequest }) {
+        return new Promise((resolve) => {
+            context.commit('putItemStart')
+            const token = authState.state.currentUser.token;
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+            interactionApi
+                .putItem(apiUrl, dataRequest)
+                .then((response) => {
+                    context.commit('putItemSuccess', response.data)
+                    resolve(response.data)
+                })
+                .catch((result) => {
+                    context.commit('putItemFailure', result.response)
+                })
+        })
     }
-
 }
 
 export default {

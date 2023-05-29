@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Delete\DeleteRequest;
 use App\Http\Requests\Store\UserRequestStoreRequest;
+use App\Http\Resources\ComputerResource;
 use App\Http\Resources\UserRequestResource;
+use App\Models\Computer;
 use App\Models\UserRequest;
 use Illuminate\Http\Request;
 
@@ -41,7 +43,12 @@ class UserRequestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $userrequest = UserRequest::find($id);
+        if ($userrequest) {
+            return new UserRequestResource($userrequest);
+        } else {
+            return response()->json(['message' => 'Request not found'], 404);
+        }
     }
 
     /**
@@ -49,7 +56,16 @@ class UserRequestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $userrequest = UserRequest::find($id);
+        if ($userrequest) {
+            $userrequest->update($request->all());
+            return (new UserRequestResource($userrequest))
+                ->additional(['message' => 'Request successfully updated'])
+                ->response()
+                ->setStatusCode(200);
+        } else {
+            return response()->json(['message' => 'Request not found'], 404);
+        }
     }
 
     /**

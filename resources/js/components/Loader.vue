@@ -6,6 +6,7 @@ export default {
 
 <template>
     <div class='loader'>
+        <div class="loader-overlay"></div>
         <svg viewBox="0 0 100 100">
             <filter id="blur" x="-100%" y="-100%" width="300%" height="300%">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
@@ -79,19 +80,22 @@ export default {
 
 <style scoped>
 .loader {
-    position: absolute;
+    position: fixed; /* Используйте fixed вместо absolute */
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 9999;
+}
+
+.loader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
 }
-
-body{
-    background:#112;
-}
-
 
 svg{
     position:absolute;

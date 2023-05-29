@@ -9,72 +9,59 @@ export default {
         VrLoader,
     },
 
-    data () {
+    data() {
         return {
             url: 'http://localhost:8000/api',
             urlError: false,
             showing: false,
-            selected: 'GET',
+            requestMethod: 'GET',
             disableButtons: false,
             apiEndPoint: '',
             computers: {
                 graphic_card: '',
                 processor: '',
-                ram: ''
+                ram: '',
             },
             games: {
                 game: '',
                 age_limit: '',
                 duration: '',
                 genre: '',
-                price: ''
+                price: '',
             },
             reservations: {
                 login: localStorage.getItem('login'),
                 reservation_time: '',
                 peoples: '',
                 game_id: '',
-                room_id: ''
+                room_id: '',
             },
             rooms: {
                 type_room: '',
                 vr_device_id: '',
                 employee_id: '',
-                price: ''
+                price: '',
             },
             vrdevices: {
                 vr_glasses: '',
                 controller: '',
-                computer_id: ''
+                computer_id: '',
             },
             requests: {
                 name: '',
-                phone_number: ''
-            }
+                phone_number: '',
+            },
         }
     },
 
     methods: {
         onSubmit() {
-            const apiEndPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length);
-            this.apiEndPoint = apiEndPoint.startsWith('i') ? apiEndPoint.substring(1) : apiEndPoint;
-            const lastChar = this.apiEndPoint.slice(-1);
-
-            if (this.selected === 'GET') {
-                if (this.apiEndPoint === '/computers' || `/computers/${lastChar}`) {
-                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
-                } else if (this.apiEndPoint === '/games' || `/games/${lastChar}`) {
-                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
-                } else if (this.apiEndPoint === '/reservations' || `/reservaions/${lastChar}`) {
-                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
-                } else if (this.apiEndPoint === '/rooms' || `/rooms/${lastChar}`) {
-                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
-                } else if (this.apiEndPoint === '/vrdevices' || `/vrdevice/${lastChar}`) {
-                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
-                } else if (this.apiEndPoint === '/requests' || `/requests/${lastChar}`) {
-                    this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint });
-                }
-            } if (this.selected === 'POST') {
+            const apiPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length)
+            this.apiEndPoint = apiPoint.startsWith('i') ? apiPoint.substring(1) : apiPoint
+console.log(this.requestMethod)
+            if (this.requestMethod === 'GET') {
+                this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint })
+            } if (this.requestMethod === 'POST') {
                 if (this.apiEndPoint === '/computers' || this.apiEndPoint === '/computers/') {
                     this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.computers })
                 } else if (this.apiEndPoint === '/games' || this.apiEndPoint === '/games/') {
@@ -88,11 +75,50 @@ export default {
                 } else if (this.apiEndPoint === '/requests' || this.apiEndPoint === '/requests/') {
                     this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.requests })
                 }
-
+            } if (this.requestMethod === 'PATCH') {
+                if (this.apiEndPoint.includes("/computers/")) {
+                    this.$store.dispatch('patchItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.computers), })
+                } if (this.apiEndPoint.includes("/games/")) {
+                    this.$store.dispatch('patchItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.games), })
+                } if (this.apiEndPoint.includes("/reservations/")) {
+                    this.$store.dispatch('patchItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.reservations), })
+                } if (this.apiEndPoint.includes("/rooms/")) {
+                    this.$store.dispatch('patchItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.rooms), })
+                } if (this.apiEndPoint.includes("/vrdevices/")) {
+                    this.$store.dispatch('patchItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.vrdevices), })
+                } if (this.apiEndPoint.includes("/requests/")) {
+                    this.$store.dispatch('patchItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.requests), })
+                }
+            } if (this.requestMethod === 'PUT') {
+                if (this.apiEndPoint.includes("/computers/")) {
+                    this.$store.dispatch('putItems', { apiUrl: this.apiEndPoint, dataRequest: this.computers })
+                } if (this.apiEndPoint.includes("/games/")) {
+                    this.$store.dispatch('putItems', { apiUrl: this.apiEndPoint, dataRequest: this.games })
+                } if (this.apiEndPoint.includes("/reservations/")) {
+                    this.$store.dispatch('putItems', { apiUrl: this.apiEndPoint, dataRequest: this.reservations })
+                } if (this.apiEndPoint.includes("/rooms/")) {
+                    this.$store.dispatch('putItems', { apiUrl: this.apiEndPoint, dataRequest: this.rooms })
+                } if (this.apiEndPoint.includes("/vrdevices/")) {
+                    this.$store.dispatch('putItems', { apiUrl: this.apiEndPoint, dataRequest: this.vrdevices })
+                } if (this.apiEndPoint.includes("/requests/")) {
+                    this.$store.dispatch('putItems', { apiUrl: this.apiEndPoint, dataRequest: this.requests })
+                }
             }
         },
+        cutObject(obj) {
+            const result = {}
+            Object.keys(obj).forEach(key => {
+                const value = obj[key]
+
+                if (value) {
+                    result[key] = value
+                }
+            })
+            return result
+        },
+
         chekUrl() {
-            if (this.url.includes('http://localhost:8000/api')){
+            if (this.url.includes('http://localhost:8000/api')) {
                 this.urlError = false
                 this.urlErrorFlag(this.urlError)
                 this.disableButtons = false
@@ -102,7 +128,7 @@ export default {
                 this.disableButtons = true
             }
         },
-        urlErrorFlag(urlError){
+        urlErrorFlag(urlError) {
             const round = document.querySelector('.round')
             if (urlError === true) {
                 round.classList.add('active')
@@ -110,27 +136,24 @@ export default {
                 round.classList.remove('active')
             }
         },
-        showUrlsGuide(){
+        showUrlsGuide() {
             this.showing = !this.showing
-        }
+        },
     },
 
     computed: {
         isSubmitting() {
-            return this.$store.state.auth.isSubmitting
-        },
-        validationErrors() {
-            return this.$store.state.auth.validationErrors
+            return this.$store.state.interaction.isSubmitting
         },
         isLoading() {
-            return this.$store.state.auth.isLoading
+            return this.$store.state.interaction.isLoading
         },
         disableButton() {
             return this.disableButtons
         },
-        responseData () {
+        responseData() {
             return this.$store.state.interaction
-        }
+        },
     },
 
     mounted() {
@@ -141,15 +164,12 @@ export default {
         this.$store.dispatch('resetVariables')
         next()
     },
-
     watch: {
-        url(newValue, oldValue) {
-            const apiEndPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length);
-            this.apiEndPoint = apiEndPoint.startsWith('i') ? apiEndPoint.substring(1) : apiEndPoint;
-            const lastChar = this.apiEndPoint.slice(-1);
-            console.log(apiEndPoint)
+        url() {
+            const apiPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length)
+            this.apiEndPoint = apiPoint.startsWith('i') ? apiPoint.substring(1) : apiPoint
         },
-    }
+    },
 }
 </script>
 
@@ -224,7 +244,7 @@ export default {
                         <form action='/' @submit.prevent='onSubmit'>
                             <div class='input-wrapper-item'>
                                 <div class='request'>
-                                    <select v-model='selected'>
+                                    <select v-model='requestMethod'>
                                         <option style='color: green'>GET</option>
                                         <option style='color: yellow'>POST</option>
                                         <option style='color: blue'>PUT</option>
@@ -246,7 +266,7 @@ export default {
                                 </div>
 
                                 <div class='submit-button'>
-                                    <input :disabled='disableButton' class='input-submit' type='submit'
+                                    <input :disabled='disableButton || isSubmitting' class='input-submit' type='submit'
                                            value='Send'>
                                 </div>
 
@@ -257,85 +277,100 @@ export default {
                 </div>
                 <div class='enter'>
                     <div class='enter-item-1'>
-                        <div v-if='selected === "POST"'>
+                        <div v-if='requestMethod === "POST" || requestMethod === "PATCH" || requestMethod === "PUT"'>
                             {
                             <div class='request-action'>
-                                <label for='gp' v-if='(apiEndPoint === "/computers" || apiEndPoint === "/computers/")'>"graphic_card":
-                                    <input id='gp' v-model='computers.graphic_card'>
-                                </label>
-                                <label for='proc' v-if='(apiEndPoint === "/computers" || apiEndPoint === "/computers/")'>"processor":
-                                    <input id='proc' v-model='computers.processor'>
-                                </label>
-                                <label for='ram' v-if='(apiEndPoint === "/computers" || apiEndPoint === "/computers/")'>"ram":
-                                    <input id='ram' v-model='computers.ram'>
-                                </label>
+                                <div
+                                    v-if='(this.apiEndPoint === "/computers" || this.apiEndPoint.includes("/computers/"))'>
+                                    <label for='gp'>"graphic_card":
+                                        <input id='gp' v-model='computers.graphic_card'>
+                                    </label>
+                                    <label for='proc'>"processor":
+                                        <input id='proc' v-model='computers.processor'>
+                                    </label>
+                                    <label for='ram'>"ram":
+                                        <input id='ram' v-model='computers.ram'>
+                                    </label>
+                                </div>
 
-                                <label for='game' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"game":
-                                    <input id='game' v-model='games.game'>
-                                </label>
-                                <label for='age_limit' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"age_limit":
-                                    <input type='number' id='age_limit' v-model='games.age_limit'>
-                                </label>
-                                <label for='duration' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"duration":
-                                    <input type='number' id='duration' v-model='games.duration'>
-                                </label>
-                                <label for='genre' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"genre":
-                                    <input id='genre' v-model='games.genre'>
-                                </label>
-                                <label for='price' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"price":
-                                    <input type='number' id='price' v-model='games.price'>
-                                </label>
+                                <div v-if='(this.apiEndPoint === "/games" || this.apiEndPoint.includes("/games/"))'>
+                                    <label for='game'>"game":
+                                        <input id='game' v-model='games.game'>
+                                    </label>
+                                    <label for='age_limit'>"age_limit":
+                                        <input type='number' id='age_limit' v-model='games.age_limit'>
+                                    </label>
+                                    <label for='duration'>"duration":
+                                        <input type='number' id='duration' v-model='games.duration'>
+                                    </label>
+                                    <label for='genre'>"genre":
+                                        <input id='genre' v-model='games.genre'>
+                                    </label>
+                                    <label for='price'>"price":
+                                        <input type='number' id='price' v-model='games.price'>
+                                    </label>
+                                </div>
 
-                                <label for='reservation_time' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"reservation_time":
-                                    <input type='text' id='reservation_time' v-model='reservations.reservation_time'>
-                                </label>
-                                <label for='peoples' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"peoples":
-                                    <input type='number' id='peoples' v-model='reservations.peoples'>
-                                </label>
-                                <label for='game' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"game":
-                                    <input type='number' id='game' v-model='reservations.game_id'>
-                                </label>
-                                <label for='room_id' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"room_id":
-                                    <input type='number' id='room_id' v-model='reservations.room_id'>
-                                </label>
+                                <div v-if='(this.apiEndPoint === "/reservations" || this.apiEndPoint.includes("/reservations/"))'>
+                                    <label for='reservation_time'>"reservation_time":
+                                        <input type='text' id='reservation_time'
+                                               v-model='reservations.reservation_time'>
+                                    </label>
+                                    <label for='peoples'>"peoples":
+                                        <input type='number' id='peoples' v-model='reservations.peoples'>
+                                    </label>
+                                    <label for='game'>"game":
+                                        <input type='number' id='game' v-model='reservations.game_id'>
+                                    </label>
+                                    <label for='room_id'>"room_id":
+                                        <input type='number' id='room_id' v-model='reservations.room_id'>
+                                    </label>
+                                </div>
 
-                                <label for='type_room' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"type_room":
-                                    <input type='text' id='type_room' v-model='rooms.type_room'>
-                                </label>
-                                <label for='vr_device_id' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"vr_device_id":
-                                    <input type='number' id='vr_device_id' v-model='rooms.vr_device_id'>
-                                </label>
-                                <label for='employee_id' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"employee_id":
-                                    <input type='number' id='employee_id' v-model='rooms.employee_id'>
-                                </label>
-                                <label for='price' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"price":
-                                    <input type='number' id='price' v-model='rooms.price'>
-                                </label>
+                                <div v-if='(this.apiEndPoint === "/rooms" || this.apiEndPoint.includes("/rooms/"))'>
+                                    <label for='type_room'>"type_room":
+                                        <input type='text' id='type_room' v-model='rooms.type_room'>
+                                    </label>
+                                    <label for='vr_device_id'>"vr_device_id":
+                                        <input type='number' id='vr_device_id' v-model='rooms.vr_device_id'>
+                                    </label>
+                                    <label for='employee_id'>"employee_id":
+                                        <input type='number' id='employee_id' v-model='rooms.employee_id'>
+                                    </label>
+                                    <label for='price'>"price":
+                                        <input type='number' id='price' v-model='rooms.price'>
+                                    </label>
+                                </div>
 
-                                <label for='vr_glasses' v-if='(apiEndPoint === "/vrdevices" || apiEndPoint === "/vrdevices/")'>"vr_glasses":
-                                    <input type='text' id='vr_glasses' v-model='vrdevices.vr_glasses'>
-                                </label>
-                                <label for='controller' v-if='(apiEndPoint === "/vrdevices" || apiEndPoint === "/vrdevices/")'>"controller":
-                                    <input type='text' id='controller' v-model='vrdevices.controller'>
-                                </label>
-                                <label for='computer_id' v-if='(apiEndPoint === "/vrdevices" || apiEndPoint === "/vrdevices/")'>"computer_id":
-                                    <input type='number' id='computer_id' v-model='vrdevices.computer_id'>
-                                </label>
+                                <div v-if='(this.apiEndPoint === "/vrdevices" || this.apiEndPoint.includes("/vrdevices/"))'>
+                                    <label for='vr_glasses'>"vr_glasses":
+                                        <input type='text' id='vr_glasses' v-model='vrdevices.vr_glasses'>
+                                    </label>
+                                    <label for='controller'>"controller":
+                                        <input type='text' id='controller' v-model='vrdevices.controller'>
+                                    </label>
+                                    <label for='computer_id'>"computer_id":
+                                        <input type='number' id='computer_id' v-model='vrdevices.computer_id'>
+                                    </label>
+                                </div>
 
-                                <label for='name' v-if='(apiEndPoint === "/requests" || apiEndPoint === "/requests/")'>"name":
-                                    <input type='text' id='name' v-model='requests.name'>
-                                </label>
-                                <label for='phone_number' v-if='(apiEndPoint === "/requests" || apiEndPoint === "/requests/")'>"phone_number":
-                                    <input type='text' id='phone_number' v-model='requests.phone_number'>
-                                </label>
+                                <div v-if='(this.apiEndPoint === "/requests" || this.apiEndPoint.includes("/requests/"))'>
+                                    <label for='name'>"name":
+                                        <input type='text' id='name' v-model='requests.name'>
+                                    </label>
+                                    <label for='phone_number'>"phone_number":
+                                        <input type='text' id='phone_number' v-model='requests.phone_number'>
+                                    </label>
+                                </div>
+
                             </div>
                             }
                         </div>
                     </div>
-<!--                    "graphic_card": "graphic_card",-->
-<!--                    "processor": "processor",-->
-<!--                    "ram": "ram"-->
                     <div class='enter-item-2'>
+                        <div class='loader-container' v-if='isLoading'>
+                            <vr-loader></vr-loader>
+                        </div>
                         <div>
                             <div v-if='!responseData.error'>
                                 <pre>{{ responseData.data }}</pre>
@@ -508,7 +543,7 @@ export default {
     text-align: left;
 }
 
-.request-action label{
+.request-action label {
     margin: 0;
     margin-left: 30px;
     margin-top: 10px;
@@ -526,6 +561,7 @@ export default {
 }
 
 .enter-item-2 {
+    position: relative;
     width: 50%;
     height: 100%;
     overflow: auto;
@@ -545,6 +581,13 @@ export default {
     width: 10px;
     height: 10px;
     background-color: #000;
+}
+
+.loader-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .input-wrapper-item {

@@ -30,7 +30,6 @@ export default {
     methods: {
         onSubmit() {
             if (this.password_confirmation === this.password) {
-                console.log(this.token)
                 this.$store.dispatch('resetPassword', {
                     email: this.email,
                     password_confirmation: this.password_confirmation,
@@ -72,7 +71,6 @@ export default {
         },
 
         errorPasswordFlag(passwordError) {
-            console.log(passwordError)
             const passwordInput = document.getElementById('password-input')
             const round = document.querySelector('.round')
             if (passwordError === true) {
