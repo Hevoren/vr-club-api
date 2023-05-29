@@ -11,10 +11,10 @@ export default {
 
     data() {
         return {
-            url: 'http://localhost:8000/api',
+            url: localStorage.getItem('url') || 'http://localhost:8000/api',
             urlError: false,
             showing: false,
-            requestMethod: 'GET',
+            requestMethod: localStorage.getItem('requestMethod') || 'GET',
             disableButtons: false,
             apiEndPoint: '',
             computers: {
@@ -103,6 +103,8 @@ console.log(this.requestMethod)
                 } if (this.apiEndPoint.includes("/requests/")) {
                     this.$store.dispatch('putItems', { apiUrl: this.apiEndPoint, dataRequest: this.requests })
                 }
+            } if (this.requestMethod === 'DELETE') {
+                this.$store.dispatch('deleteItems', { apiUrl: this.apiEndPoint })
             }
         },
         cutObject(obj) {
@@ -165,9 +167,14 @@ console.log(this.requestMethod)
         next()
     },
     watch: {
-        url() {
+        url(newUrl) {
+            localStorage.setItem('url', newUrl);
             const apiPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length)
             this.apiEndPoint = apiPoint.startsWith('i') ? apiPoint.substring(1) : apiPoint
+        },
+        requestMethod(newMethod) {
+            localStorage.setItem('requestMethod', newMethod);
+            // ...
         },
     },
 }

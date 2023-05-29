@@ -119,6 +119,24 @@ const mutations = {
         state.error = payload
         state.isSubmitting = false
         state.isLoading = false
+    },
+    // -----
+    deleteItemStart(state) {
+        state.isLoading = true
+        state.isSubmitting = true
+        state.responseMessage = null
+        state.error = null
+        state.data = null
+    },
+    deleteItemSuccess(state, payload) {
+        state.data = payload
+        state.isSubmitting = false
+        state.isLoading = false
+    },
+    deleteItemFailure(state, payload) {
+        state.error = payload
+        state.isSubmitting = false
+        state.isLoading = false
     }
 
 }
@@ -216,6 +234,22 @@ const actions = {
                 })
                 .catch((result) => {
                     context.commit('putItemFailure', result.response)
+                })
+        })
+    },
+    deleteItems(context, { apiUrl }) {
+        return new Promise((resolve) => {
+            context.commit('deleteItemStart')
+            const token = authState.state.currentUser.token;
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+            interactionApi
+                .deleteItem(apiUrl)
+                .then((response) => {
+                    context.commit('deleteItemSuccess', response.data)
+                    resolve(response)
+                })
+                .catch((result) => {
+                    context.commit('deleteItemFailure', result.response)
                 })
         })
     }

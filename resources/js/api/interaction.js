@@ -26,11 +26,16 @@ const putItem = (apiUrl, dataRequest) => {
     return axios.put(apiUrl, dataRequest)
 }
 
+const deleteItem = (apiUrl) => {
+    return axios.delete(apiUrl)
+}
+
 export default {
     forgotPassword,
     resetPassword,
     getItem,
     setItem,
     patchItem,
-    putItem
+    putItem,
+    deleteItem
 };
