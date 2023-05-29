@@ -35,6 +35,21 @@ export default {
                 peoples: '',
                 game_id: '',
                 room_id: ''
+            },
+            rooms: {
+                type_room: '',
+                vr_device_id: '',
+                employee_id: '',
+                price: ''
+            },
+            vrdevices: {
+                vr_glasses: '',
+                controller: '',
+                computer_id: ''
+            },
+            requests: {
+                name: '',
+                phone_number: ''
             }
         }
     },
@@ -66,7 +81,14 @@ export default {
                     this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.games })
                 } else if (this.apiEndPoint === '/reservations' || this.apiEndPoint === '/reservations/') {
                     this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.reservations })
+                } else if (this.apiEndPoint === '/rooms' || this.apiEndPoint === '/rooms/') {
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.rooms })
+                } else if (this.apiEndPoint === '/vrdevices' || this.apiEndPoint === '/vrdevices/') {
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.vrdevices })
+                } else if (this.apiEndPoint === '/requests' || this.apiEndPoint === '/requests/') {
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.requests })
                 }
+
             }
         },
         chekUrl() {
@@ -247,6 +269,7 @@ export default {
                                 <label for='ram' v-if='(apiEndPoint === "/computers" || apiEndPoint === "/computers/")'>"ram":
                                     <input id='ram' v-model='computers.ram'>
                                 </label>
+
                                 <label for='game' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"game":
                                     <input id='game' v-model='games.game'>
                                 </label>
@@ -262,6 +285,7 @@ export default {
                                 <label for='price' v-if='(apiEndPoint === "/games" || apiEndPoint === "/games/")'>"price":
                                     <input type='number' id='price' v-model='games.price'>
                                 </label>
+
                                 <label for='reservation_time' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"reservation_time":
                                     <input type='text' id='reservation_time' v-model='reservations.reservation_time'>
                                 </label>
@@ -273,6 +297,36 @@ export default {
                                 </label>
                                 <label for='room_id' v-if='(apiEndPoint === "/reservations" || apiEndPoint === "/reservations/")'>"room_id":
                                     <input type='number' id='room_id' v-model='reservations.room_id'>
+                                </label>
+
+                                <label for='type_room' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"type_room":
+                                    <input type='text' id='type_room' v-model='rooms.type_room'>
+                                </label>
+                                <label for='vr_device_id' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"vr_device_id":
+                                    <input type='number' id='vr_device_id' v-model='rooms.vr_device_id'>
+                                </label>
+                                <label for='employee_id' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"employee_id":
+                                    <input type='number' id='employee_id' v-model='rooms.employee_id'>
+                                </label>
+                                <label for='price' v-if='(apiEndPoint === "/rooms" || apiEndPoint === "/rooms/")'>"price":
+                                    <input type='number' id='price' v-model='rooms.price'>
+                                </label>
+
+                                <label for='vr_glasses' v-if='(apiEndPoint === "/vrdevices" || apiEndPoint === "/vrdevices/")'>"vr_glasses":
+                                    <input type='text' id='vr_glasses' v-model='vrdevices.vr_glasses'>
+                                </label>
+                                <label for='controller' v-if='(apiEndPoint === "/vrdevices" || apiEndPoint === "/vrdevices/")'>"controller":
+                                    <input type='text' id='controller' v-model='vrdevices.controller'>
+                                </label>
+                                <label for='computer_id' v-if='(apiEndPoint === "/vrdevices" || apiEndPoint === "/vrdevices/")'>"computer_id":
+                                    <input type='number' id='computer_id' v-model='vrdevices.computer_id'>
+                                </label>
+
+                                <label for='name' v-if='(apiEndPoint === "/requests" || apiEndPoint === "/requests/")'>"name":
+                                    <input type='text' id='name' v-model='requests.name'>
+                                </label>
+                                <label for='phone_number' v-if='(apiEndPoint === "/requests" || apiEndPoint === "/requests/")'>"phone_number":
+                                    <input type='text' id='phone_number' v-model='requests.phone_number'>
                                 </label>
                             </div>
                             }
