@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\ValidationLogin;
+use App\Rules\ValidationPassword;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserStoreRequest extends FormRequest
@@ -24,8 +26,8 @@ class UserStoreRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
-            'login' => 'required|unique:users|alpha|min:3|max:20|regex:/^[a-zA-Z]+$/',
-            'password' => 'required|min:8|max:20|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'login' => ['required', 'unique:users', 'alpha', new ValidationLogin],
+            'password' => ['required', new ValidationPassword],
             'email' => 'required|email|unique:users',
             'role_id' => 'integer'
         ];

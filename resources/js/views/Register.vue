@@ -32,8 +32,6 @@ export default {
                     email: this.email,
                     login: this.login,
                     password: this.password,
-                }).then(() => {
-                    this.$router.push({ name: 'main' })
                 })
             }
         },
@@ -96,9 +94,15 @@ export default {
         disableButton() {
             return this.disableButtons
         },
+        responseMessage() {
+            return this.$store.state.auth.responseMessage
+        }
     },
     beforeRouteLeave(to, from, next) {
-        this.$store.dispatch('resetVariables');
+        this.$store.state.auth.isSubmitting = false
+        this.$store.state.auth.validationErrors = null
+        this.$store.state.auth.isLoading = null
+        this.$store.state.auth.responseMessage = null
         next();
     }
 }
@@ -110,6 +114,9 @@ export default {
         <div class='main-form'>
             <div class='form-block'>
                 <p class='form-block-title'>Sign Up</p>
+                <div class='response-message' v-if='responseMessage'>
+                    {{ responseMessage.message }}
+                </div>
                 <div class='error-block'>
                     <vr-errors v-if='validationErrors'
                                :validation-errors='validationErrors'
@@ -216,6 +223,11 @@ export default {
 .form-block-title {
     text-align: center;
     font-size: 32px;
+}
+
+.response-message {
+    color: green;
+    text-align: left;
 }
 
 .form-block form {

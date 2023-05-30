@@ -22,8 +22,6 @@ export default {
             if (this.email) {
                 this.$store.dispatch('sendEmail', {
                     email: this.email
-                }).then(() => {
-                    this.$router.push({ name: "login"});
                 })
             }
         },

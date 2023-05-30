@@ -1,5 +1,6 @@
 import authApi from '../../api/auth.js'
 import { getItem, setItem } from '../../helpers/saveLocStorage.js'
+import getAltAxis from '@popperjs/core/lib/utils/getAltAxis.js'
 
 
 const state = {
@@ -8,26 +9,32 @@ const state = {
     validationErrors: null,
     isLoggedIn: null,
     isLoading: null,
+    responseMessage: null
 }
 
 const mutations = {
     registerStart(state) {
+        state.idLoggedIn = false
         state.isLoading = true
         state.isSubmitting = true
         state.validationErrors = null
+        state.responseMessage = null
     },
-    registerSuccess(state) {
+    registerSuccess(state, payload) {
         state.isSubmitting = false
+        state.responseMessage = payload
         state.isLoggedIn = true
         state.isLoading = false
     },
     registerFailure(state, payload) {
         state.isSubmitting = false
+        state.isLoggedIn = false
         state.validationErrors = payload
         state.isLoading = false
     },
     loginStart(state) {
         state.isLoading = true
+        state.isLoggedIn = false
         state.isSubmitting = true
         state.validationErrors = null
     },
@@ -39,6 +46,7 @@ const mutations = {
     },
     loginFailure(state, payload) {
         state.isSubmitting = false
+        state.isLoggedIn = false
         state.validationErrors = payload
         state.isLoading = false
     },
@@ -57,6 +65,7 @@ const mutations = {
     exitFailure(state, payload) {
         state.isSubmitting = false
         state.validationErrors = payload
+        state.isLoggedIn = false
         state.isLoading = false
     },
     refreshAuthStart(state) {
@@ -71,9 +80,6 @@ const mutations = {
     },
     refreshAuthFailure(state) {
         state.isLoading = false
-    },
-    refreshIsLoggedIn(state) {
-        state.isLoggedIn = true
     }
 }
 
@@ -84,7 +90,8 @@ const actions = {
             authApi
                 .register(credentials)
                 .then((response) => {
-                    context.commit('registerSuccess', credentials)
+                    console.log(response)
+                    context.commit('registerSuccess', response.data)
                     resolve(response.data.user)
                 })
                 .catch((result) => {

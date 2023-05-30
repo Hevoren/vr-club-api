@@ -15,6 +15,10 @@ export default {
             });
         },
     },
+    beforeRouteLeave(to, from, next) {
+        this.$store.dispatch('resetVariables');
+        next();
+    }
 }
 </script>
 
@@ -27,4 +31,8 @@ export default {
 </template>
 
 <style scoped>
+.error-messages {
+    list-style-type: disc
+;
+}
 </style>

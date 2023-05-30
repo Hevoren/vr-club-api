@@ -42,7 +42,10 @@ export default {
     },
 
     beforeRouteLeave(to, from, next) {
-        this.$store.commit('resetVariablesStart');
+        this.$store.state.auth.isSubmitting = false
+        this.$store.state.auth.validationErrors = null
+        this.$store.state.auth.isLoading = null
+        this.$store.state.auth.responseMessage = null
         next();
     }
 }
