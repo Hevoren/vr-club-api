@@ -1,5 +1,5 @@
 <script>
-
+import VueCookies from 'vue-cookies'
 import VrTopBar from '../js/components/TopBar.vue'
 import VrMain from '../js/views/Main.vue'
 import VrFooter from '../js/components/Footer.vue'
@@ -11,7 +11,8 @@ export default {
         VrFooter,
         VrMain,
         VrTopBar,
-        VrResetPassword
+        VrResetPassword,
+        VueCookies
     },
     mounted() {
         this.$store.dispatch('refreshAuth')

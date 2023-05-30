@@ -1,7 +1,5 @@
 import authApi from '../../api/auth.js'
-import { getItem, setItem } from '../../helpers/saveLocStorage.js'
-import getAltAxis from '@popperjs/core/lib/utils/getAltAxis.js'
-
+import VueCookies from 'vue-cookies'
 
 const state = {
     isSubmitting: false,
@@ -90,7 +88,6 @@ const actions = {
             authApi
                 .register(credentials)
                 .then((response) => {
-                    console.log(response)
                     context.commit('registerSuccess', response.data)
                     resolve(response.data.user)
                 })
@@ -105,19 +102,16 @@ const actions = {
             authApi
                 .login(credentials)
                 .then((response) => {
-                    localStorage.setItem('token', response.data.bearer)
-                    localStorage.setItem('login', credentials.login)
-                    localStorage.setItem('password',credentials.password)
                     credentials.token = response.data.bearer
+
+                    VueCookies.set('login', credentials.login, "3600s")
+                    VueCookies.set('password', credentials.password, "3600s")
+                    VueCookies.set('token', credentials.token, '3600s')
                     context.commit('loginSuccess', credentials)
                     resolve(response)
                 })
                 .catch((result) => {
-                    if (result.response.status === 422) {
-                        context.commit('loginFailure', {
-                            error: ['Email or password incorrect'],
-                        })
-                    }
+                        context.commit('loginFailure', result)
                 })
         })
     },
@@ -131,7 +125,9 @@ const actions = {
             authApi
                 .logout(token)
                 .then((response) => {
-                    localStorage.clear()
+                    VueCookies.remove('token')
+                    VueCookies.remove('login')
+                    VueCookies.remove('password')
                     context.commit('exitSuccess', response.data.message)
                     resolve()
                 })
@@ -144,9 +140,9 @@ const actions = {
     },
     refreshAuth(context) {
         context.commit('refreshAuthStart')
-        const login = localStorage.getItem('login')
-        const token = localStorage.getItem('token')
-        const password = localStorage.getItem('password')
+        const login = VueCookies.get('login')
+        const token = VueCookies.get('token')
+        const password = VueCookies.get('password')
         if (login && token && password) {
             const payload = { login: login, token: token, password: password }
             context.commit('refreshAuthSuccess', payload)
