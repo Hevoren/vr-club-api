@@ -23,7 +23,7 @@ const mutations = {
     registerSuccess(state, payload) {
         state.isSubmitting = false
         state.responseMessage = payload
-        state.isLoggedIn = true
+        state.isLoggedIn = false
         state.isLoading = false
     },
     registerFailure(state, payload) {

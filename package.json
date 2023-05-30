@@ -19,6 +19,7 @@
         "js-cookie": "^3.0.5",
         "vue-loader": "^17.0.1",
         "vue-router": "^4.2.1",
+        "vue-typed-js": "^0.1.2",
         "vuex": "^4.1.0"
     }
 }

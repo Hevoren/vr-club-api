@@ -11,7 +11,7 @@ export default {
         VrFooter,
         VrMain,
         VrTopBar,
-        VrResetPassword,
+        VrResetPassword
     },
     mounted() {
         this.$store.dispatch('refreshAuth')

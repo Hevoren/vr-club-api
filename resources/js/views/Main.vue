@@ -6,7 +6,7 @@ export default {
     name: 'VrMain',
     components: {
         VrErrors,
-        VrLoader,
+        VrLoader
     },
 
     data() {
@@ -58,7 +58,6 @@ export default {
         onSubmit() {
             const apiPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length)
             this.apiEndPoint = apiPoint.startsWith('i') ? apiPoint.substring(1) : apiPoint
-console.log(this.requestMethod)
             if (this.requestMethod === 'GET') {
                 this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint })
             } if (this.requestMethod === 'POST') {
@@ -396,6 +395,9 @@ console.log(this.requestMethod)
 </template>
 
 <style scoped>
+@font-face {
+    font-family: 'Source Code Pro', monospace;
+}
 .main {
     min-height: 88vh;
     display: flex;
@@ -413,13 +415,14 @@ console.log(this.requestMethod)
     height: 5%;
 }
 
-.open-url-info button {
+.open-url-info {
     font-size: 18px;
-    transition: 0.5s;
     outline: none;
+    transition: transform 0.3s ease-in-out;
 }
 
 .open-url-info:hover {
+    transform: scale(1.1);
     color: red;
 }
 
@@ -494,12 +497,14 @@ console.log(this.requestMethod)
 .close-button {
     margin-top: 10px;
     margin-right: 10px;
-    transition: .5s;
     font-size: 24px;
+    color: red;
+    transition: transform 0.5s;
 }
 
 .close-button:hover {
-    color: red;
+    transform: scale(1.2);
+    color: #ffffff;
 }
 
 .first-test-block {
@@ -539,36 +544,36 @@ console.log(this.requestMethod)
 }
 
 .enter-item-1 {
+    font-family: 'Source Code Pro', monospace;
     width: 50%;
     height: 100%;
     border-radius: 15px;
     border-right: 1px solid black;
 }
 
-.request-action {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.request-action label {
-    margin: 0;
-    margin-left: 30px;
-    margin-top: 10px;
-
-    float: left;
-}
-
-.request-action label input {
-    float: right;
-    text-indent: 10px;
+.request-action div label {
     margin-left: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.request-action div label input {
+    text-indent: 10px;
     background: none;
     outline: none;
-    border: 1px solid red;
+    color: red;
+    border-bottom: 2px solid black;
+    margin-right: 10px;
+    transition: .3s;
+}
+
+.request-action div label input:focus {
+    border-bottom: 2px solid red;
 }
 
 .enter-item-2 {
+    font-family: 'Source Code Pro', monospace;
     position: relative;
     width: 50%;
     height: 100%;
