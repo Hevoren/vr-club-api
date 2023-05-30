@@ -21,15 +21,15 @@ class ChangePasswordController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function changePassword(Request $request)
     {
         $request->validate([
-            'login' => 'required|unique:users|alpha|min:3|max:20|regex:/^[a-zA-Z]+$/',
+            'login' => 'required',
             'password' => 'required|min:8|max:20|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'new_password' => 'required|min:8|max:20|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
         ]);
 
-        $user = User::where('login', $request->login);
+        $user = User::where('login', $request->login)->first();
 
         if (Hash::check($request->password, $user->password)) {
             $user->update([

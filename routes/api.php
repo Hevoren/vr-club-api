@@ -44,7 +44,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:
     Route::apiResource('rooms', RoomController::class);
     Route::apiResource('vrdevices', VrDeviceController::class);
     Route::apiResource('requests', UserRequestController::class);
-    Route::apiResource('change-password', ChangePasswordController::class);
+    Route::post('change-password', [ChangePasswordController::class, 'changePassword']);
     Route::post('logout', [AuthController::class, 'logoutUser']);
 });
 
