@@ -20,7 +20,9 @@ export default {
             emailError: '',
             passwordError: false,
             disableButtons: '',
-            showFlag: false
+            showFlag: false,
+            isResending: false,
+            countdownTime: 0,
         }
     },
 
@@ -80,15 +82,28 @@ export default {
         responseMessageFunc() {
             if (this.responseMessage !== null) {
                 this.showFlag = true
-                console.log('not nulll', this.showFlag)
+                this.setTimer()
             } else {
                 this.showFlag = false
-                console.log('null', this.showFlag)
-                console.log('responseMessage', this.responseMessage)
             }
         },
         resendEmailFunc() {
             this.$store.dispatch('resendEmail')
+            this.setTimer()
+        },
+        setTimer() {
+            this.isResending = true;
+            this.countdownTime = 20;
+            setTimeout(() => {
+                const countdown = setInterval(() => {
+                    if (this.countdownTime > 0) {
+                        this.countdownTime--;
+                    } else {
+                        clearInterval(countdown);
+                        this.isResending = false;
+                    }
+                }, 1000);
+            }, 0);
         }
     },
 
@@ -129,7 +144,6 @@ export default {
         <vr-loader v-if='isLoading'></vr-loader>
         <div class='resend-email' v-show='showFlag === true'>
             <div class='resend-email-title'>
-                <p>On your email has been send verification link</p>
                 <p>The email didn't arrive? - send it again!</p>
             </div>
             <div class='error-block'>
@@ -137,8 +151,11 @@ export default {
                            :validation-errors='validationErrors'
                            class='errors'></vr-errors>
             </div>
+            <div v-if="isResending">
+                <span>Resend again in {{ countdownTime }} seconds</span>
+            </div>
             <div class='resend-email-item'>
-                <button :disabled='isSubmitting' class='resend-email-button' @click='resendEmailFunc'>Resend Email</button>
+                <button :disabled='isSubmitting || isResending' class='resend-email-button' @click='resendEmailFunc'>Resend Email</button>
             </div>
         </div>
         <div class='main-form' v-show='showFlag === false'>
@@ -247,13 +264,8 @@ export default {
 .resend-email-title p:nth-child(1){
     font-size: 20px;
     text-align: center;
-    color: green;
 }
 
-.resend-email-title p:nth-child(2) {
-    font-size: 14px;
-    text-align: center;
-}
 
 .resend-email-item {
     height: 10%;
