@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ChangePasswordController;
+use App\Http\Controllers\Api\ChangeUserInfo;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PageForgotPassword;
@@ -43,8 +44,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:
     Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('rooms', RoomController::class);
     Route::apiResource('vrdevices', VrDeviceController::class);
-    Route::apiResource('requests', UserRequestController::class);
     Route::post('change-password', [ChangePasswordController::class, 'changePassword']);
+    Route::post('change-user-info', [ChangeUserInfo::class, 'updateUserInfo']);
     Route::post('logout', [AuthController::class, 'logoutUser']);
 });
 
@@ -56,12 +57,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['admin
 
 });
 Route::get('/email/verify', [VerificationEmail::class, 'checkStatusVerification'])->name('verification.notice');
-Route::get('/email/verify/resend', [VerificationEmail::class, 'resendVerificationEmail'])->name('verification.again');
+Route::post('/email/verify/resend', [VerificationEmail::class, 'resendVerificationEmail'])->name('verification.again');
 Route::get('/email/verify/{id}/{hash}', [VerificationEmail::class, 'verifyUser'])->middleware('signed')->name('verification.verify');
 
-Route::get('/redirect-to-forgot-passwor.
-', [RedirectForgotPasswordController::class, 'redirectToPage']);
+Route::get('/redirect-to-forgot-password', [RedirectForgotPasswordController::class, 'redirectToPage']);
 
+Route::post('/requests', [UserRequestController::class, 'storeRequest']);
+Route::get('/requests', [UserRequestController::class, 'showRequest']);
 Route::post('register', [AuthController::class, 'registerUser']);
 Route::post('login', [AuthController::class, 'loginUser']);
 

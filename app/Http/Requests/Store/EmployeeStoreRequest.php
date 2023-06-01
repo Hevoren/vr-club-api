@@ -30,7 +30,7 @@ class EmployeeStoreRequest extends FormRequest
             'mid_name' => 'required|string|max:255',
             'salary' => 'required|numeric',
             'title' => 'required|string|max:255',
-            'phone_number' => 'required|regex:/^\d{3}-\d{3}-\d{2}-\d{2}$/'
+            'phone_number' => 'required|regex:/^\d{1}\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/'
         ];
     }
 }

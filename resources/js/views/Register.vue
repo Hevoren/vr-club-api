@@ -19,7 +19,8 @@ export default {
             confirmpassword: '',
             emailError: '',
             passwordError: false,
-            disableButtons: ''
+            disableButtons: '',
+            showFlag: false
         }
     },
 
@@ -32,6 +33,8 @@ export default {
                     email: this.email,
                     login: this.login,
                     password: this.password,
+                }).then(() => {
+                    this.responseMessageFunc()
                 })
             }
         },
@@ -74,6 +77,19 @@ export default {
                 round.classList.remove('active')
             }
         },
+        responseMessageFunc() {
+            if (this.responseMessage !== null) {
+                this.showFlag = true
+                console.log('not nulll', this.showFlag)
+            } else {
+                this.showFlag = false
+                console.log('null', this.showFlag)
+                console.log('responseMessage', this.responseMessage)
+            }
+        },
+        resendEmailFunc() {
+            this.$store.dispatch('resendEmail')
+        }
     },
 
     mounted() {
@@ -111,7 +127,21 @@ export default {
 <template>
     <div class='main'>
         <vr-loader v-if='isLoading'></vr-loader>
-        <div class='main-form'>
+        <div class='resend-email' v-show='showFlag === true'>
+            <div class='resend-email-title'>
+                <p>On your email has been send verification link</p>
+                <p>The email didn't arrive? - send it again!</p>
+            </div>
+            <div class='error-block'>
+                <vr-errors v-if='validationErrors'
+                           :validation-errors='validationErrors'
+                           class='errors'></vr-errors>
+            </div>
+            <div class='resend-email-item'>
+                <button :disabled='isSubmitting' class='resend-email-button' @click='resendEmailFunc'>Resend Email</button>
+            </div>
+        </div>
+        <div class='main-form' v-show='showFlag === false'>
             <div class='form-block'>
                 <p class='form-block-title'>Sign Up</p>
                 <div class='response-message' v-if='responseMessage'>
@@ -203,6 +233,49 @@ export default {
 }
 
 
+.resend-email {
+    width: 600px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.resend-email-title {
+    height: 90%;
+}
+
+.resend-email-title p:nth-child(1){
+    font-size: 20px;
+    text-align: center;
+    color: green;
+}
+
+.resend-email-title p:nth-child(2) {
+    font-size: 14px;
+    text-align: center;
+}
+
+.resend-email-item {
+    height: 10%;
+    margin-top: 30px;
+}
+
+.resend-email-button {
+    background: #720f0f;
+    border-radius: 15px;
+    width: 200px;
+    height: 40px;
+    transition: .5s;
+}
+.resend-email-button:hover {
+    background: #440909;
+}
+
+.response-message {
+    color: green;
+    text-align: left;
+}
+
 .main-form {
     display: flex;
     flex-direction: column;
@@ -223,11 +296,6 @@ export default {
 .form-block-title {
     text-align: center;
     font-size: 32px;
-}
-
-.response-message {
-    color: green;
-    text-align: left;
 }
 
 .form-block form {

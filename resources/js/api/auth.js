@@ -12,8 +12,13 @@ const logout = (credentials) => {
     return axios.post("/logout", credentials);
 }
 
+const resendEm = (credentials) => {
+    return axios.post("/email/verify/resend", credentials)
+}
+
 export default {
     register,
     login,
-    logout
+    logout,
+    resendEm
 };

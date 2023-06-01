@@ -78,6 +78,21 @@ const mutations = {
     },
     refreshAuthFailure(state) {
         state.isLoading = false
+    },
+    resendEmailStart(state) {
+        state.isLoading = true
+        state.isSubmitting = true
+        state.validationErrors = null
+    },
+    resendEmailSuccess(state, payload) {
+        state.isSubmitting = false
+        state.responseMessage = payload
+        state.isLoading = false
+    },
+    resendEmailFailure(state, payload) {
+        state.validationErrors = payload
+        state.isSubmitting = false
+        state.isLoading = false
     }
 }
 
@@ -88,6 +103,7 @@ const actions = {
             authApi
                 .register(credentials)
                 .then((response) => {
+                    localStorage.setItem('login', credentials.login)
                     context.commit('registerSuccess', response.data)
                     resolve(response.data.user)
                 })
@@ -150,6 +166,23 @@ const actions = {
             context.commit('refreshAuthFailure')
         }
     },
+    resendEmail(context) {
+        return new Promise((resolve) => {
+            const login = localStorage.getItem('login')
+            context.commit('resendEmailStart')
+            authApi
+                .resendEm({login: login})
+                .then((response) => {
+                    context.commit('resendEmailSuccess', response.data.message)
+                    resolve()
+                })
+                .catch((result) => {
+                    if (result.response.status === 401) {
+                        context.commit('resendEmailFailure', result.response.data.message)
+                    }
+                })
+        })
+    }
 }
 
 export default {
