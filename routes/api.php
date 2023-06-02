@@ -1,24 +1,23 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\ChangeUserInfo;
+use App\Http\Controllers\Api\ComputerController;
 use App\Http\Controllers\Api\EmployeeController;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\GameController;
 use App\Http\Controllers\Api\PageForgotPassword;
+use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\RedirectForgotPasswordController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\StatusController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserRequestController;
 use App\Http\Controllers\Api\VerificationEmail;
 use App\Http\Controllers\Api\VrDeviceController;
-use App\Http\Controllers\PageForgotPasswordController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ComputerController;
-use App\Http\Controllers\Api\GameController;
-use App\Http\Controllers\Api\UserRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,10 +29,8 @@ use App\Http\Controllers\Api\UserRequestController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::get('user', function (Request $request) {
-    return $request->user();
-});
 
+//for user/admin interaction
 Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:sanctum', 'verify']], function () {
     Route::apiResource('computers', ComputerController::class);
     Route::apiResource('games', GameController::class);
@@ -45,6 +42,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:
     Route::post('logout', [AuthController::class, 'logoutUser']);
 });
 
+//for admin interaction
 Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['admin', 'auth:sanctum']], function () {
     Route::apiResource('employees', EmployeeController::class);
     Route::apiResource('statuses', StatusController::class);
@@ -52,16 +50,23 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['admin
     Route::apiResource('users', UserController::class);
 
 });
+
+//email-verification
 Route::get('/email/verify', [VerificationEmail::class, 'checkStatusVerification'])->name('verification.notice');
 Route::post('/email/verify/resend', [VerificationEmail::class, 'resendVerificationEmail'])->name('verification.again');
 Route::get('/email/verify/{id}/{hash}', [VerificationEmail::class, 'verifyUser'])->middleware('signed')->name('verification.verify');
 
-Route::get('/redirect-to-forgot-password', [RedirectForgotPasswordController::class, 'redirectToPage']);
+//send/get requests
+Route::post('requests', [UserRequestController::class, 'storeRequest']);
+Route::get('requests', [UserRequestController::class, 'showRequest'])->middleware(['admin', 'auth:sanctum']);
 
-Route::post('/requests', [UserRequestController::class, 'storeRequest']);
-Route::get('/requests', [UserRequestController::class, 'showRequest']);
+// auth
 Route::post('register', [AuthController::class, 'registerUser']);
 Route::post('login', [AuthController::class, 'loginUser']);
 
-Route::apiResource('/forgot-password', PageForgotPassword::class);
-Route::post('/reset-password-action', [PageForgotPasswordController::class, 'resetEmailForgotPassword']);
+//redirect to forgot password page (NOT NEED!)
+Route::get('/redirect-to-forgot-password', [RedirectForgotPasswordController::class, 'redirectToPage']);
+
+//forgot password
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendEmailForgotPassword']);
+Route::post('/reset-password-action', [ForgotPasswordController::class, 'resetEmailForgotPassword']);

@@ -1,14 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\PageForgotPasswordController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\Api\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +18,4 @@ Route::get('{any}', function () {
     return view('welcome');
 })->where('any','.*');
 
-Route::get('/reset-password/{token}', [PageForgotPasswordController::class, 'getEmailForgotPassword'])->name('password.reset');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'getEmailForgotPassword'])->name('password.reset');

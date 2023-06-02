@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\UserStoreRequest;
 use App\Http\Requests\Delete\DeleteRequest;
-use App\Http\Requests\Update\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -27,13 +27,9 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserStoreRequest $request)
+    public function store(Request $request)
     {
-        $user = User::create($request->validated());
-        return (new UserResource($user))
-            ->additional(['message' => 'User success added'])
-            ->response()
-            ->setStatusCode(201);
+       //
     }
 
     /**
@@ -52,32 +48,16 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
-        $user = User::find($id);
-        if ($user) {
-            $user->update($request->all());
-            return (new UserResource($user))
-                ->additional(['message' => 'User successfully updated'])
-                ->response()
-                ->setStatusCode(200);
-        } else {
-            return response()->json(['message' => 'User not found'], 404);
-        }
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeleteRequest $request, string $id)
+    public function destroy(Request $request, string $id)
     {
-        $user = User::findOrFail($id);
-
-        if ($request->user()->tokenCan('delete')) {
-            $user->delete();
-            return response()->json(['message' => 'User deleted']);
-        } else {
-            return response()->json(['message' => 'Unauthorized']);
-        }
+        //
     }
 }

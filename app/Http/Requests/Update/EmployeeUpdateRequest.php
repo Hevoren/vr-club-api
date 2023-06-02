@@ -32,7 +32,7 @@ class EmployeeUpdateRequest extends FormRequest
                 'mid_name' => 'required|string|max:255',
                 'salary' => 'required|numeric',
                 'title' => 'required|string|max:255',
-                'phone_number' => 'required|regex:/^\d{3}-\d{3}-\d{2}-\d{2}$/'
+                'phone_number' => 'required|regex:/^8\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/'
             ];
         } else {
             return [
@@ -42,7 +42,7 @@ class EmployeeUpdateRequest extends FormRequest
                 'mid_name' => 'sometimes|required|string|max:255',
                 'salary' => 'sometimes|required|numeric',
                 'title' => 'sometimes|required|string|max:255',
-                'phone_number' => 'sometimes|required|regex:/^\d{3}-\d{3}-\d{2}-\d{2}$/'
+                'phone_number' => 'sometimes|required|regex:/^8\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/'
             ];
         }
     }

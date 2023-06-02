@@ -60,9 +60,7 @@ class AuthController extends Controller
                     $token = $user->createToken('basic-token', ['none']);
                 }
                 if ($token) {
-                    return response()->json([
-                        'bearer' => $token->plainTextToken,
-                    ]);
+                    return response()->json(['bearer' => $token->plainTextToken, 'role_id' => $user->role_id]);
                 } else {
                     return response()->json(['message' => 'Error creating token']);
                 }

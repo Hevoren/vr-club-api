@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -9,13 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
-class PageForgotPasswordController extends Controller
+class ForgotPasswordController extends Controller
 {
-    public function renderPageForgotPassword()
-    {
-        return view('auth.passwords.email');
-    }
-
     public function sendEmailForgotPassword(Request $request)
     {
         $request->validate(['email' => 'required|email']);
