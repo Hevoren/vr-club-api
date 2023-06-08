@@ -11,6 +11,7 @@ use App\Models\Game;
 use App\Models\Reservation;
 use App\Models\Room;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -58,12 +59,17 @@ class ReservationController extends Controller
             ]);
 
             $balls = $user->balls;
-
             $balls += $all_price * 0.01;
-
             $user->balls = $balls;
-
             $user->save();
+
+            $reservation = Reservation::latest()->first();
+            $duration = $game->duration;
+            $time = Carbon::parse($reservation->reservation_time);
+            $reservation_time_end = $time->addMinutes($duration);
+            $reservation_time_end = $reservation_time_end->format('Y-m-d H-i-s');
+            $reservation->reservation_time_end = $reservation_time_end;
+            $reservation->save();
 
             return (new ReservationResource($reservation))
                 ->additional(['message' => 'Reservation success added'])

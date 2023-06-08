@@ -11,6 +11,7 @@ export default {
 
     data() {
         return {
+            baseUrl: 'http://localhost:8000/api',
             url: localStorage.getItem('url') || 'http://localhost:8000/api',
             urlError: false,
             showing: false,
@@ -56,7 +57,7 @@ export default {
 
     methods: {
         onSubmit() {
-            const apiPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length)
+            const apiPoint = this.url.substring(this.url.indexOf(this.baseUrl) + this.baseUrl.length)
             this.apiEndPoint = apiPoint.startsWith('i') ? apiPoint.substring(1) : apiPoint
             if (this.requestMethod === 'GET') {
                 this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint })
@@ -119,7 +120,7 @@ export default {
         },
 
         chekUrl() {
-            if (this.url.includes('http://localhost:8000/api')) {
+            if (this.url.includes(this.baseUrl)) {
                 this.urlError = false
                 this.urlErrorFlag(this.urlError)
                 this.disableButtons = false
@@ -168,7 +169,7 @@ export default {
     watch: {
         url(newUrl) {
             localStorage.setItem('url', newUrl);
-            const apiPoint = this.url.substring(this.url.indexOf('http://localhost:8000/api') + 'http://localhost:8000/api'.length)
+            const apiPoint = this.url.substring(this.url.indexOf(this.baseUrl) + this.baseUrl.length)
             this.apiEndPoint = apiPoint.startsWith('i') ? apiPoint.substring(1) : apiPoint
         },
         requestMethod(newMethod) {

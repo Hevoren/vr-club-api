@@ -24,6 +24,7 @@ class ReservationResource extends JsonResource
             'reservation_id' => $this->reservation_id,
             'user' => $userFullName,
             'reservation_time' => $this->reservation_time,
+            'reservation_time_end' => $this->reservation_time_end,
             'peoples' => $this->peoples,
             'game' => Game::find($this->game_id)->game,
             'room' => Room::find($this->room_id)->type_room,

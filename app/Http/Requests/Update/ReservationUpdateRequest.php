@@ -11,9 +11,7 @@ class ReservationUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = $this->user();
-
-        return $user !== null && $user->tokenCan('update');
+        return true;
     }
 
     /**
@@ -26,8 +24,8 @@ class ReservationUpdateRequest extends FormRequest
         $method = $this->method();
         if ($method === 'PUT') {
             return [
-                'user_id' => 'required|integer',
-                'reservation_time' => 'required|date',
+                'login' => 'required',
+                'reservation_time' => 'required|date|after:now',
                 'peoples' => 'required|integer',
                 'game_id' => 'required|integer',
                 'room_id' => 'required|integer',
@@ -35,8 +33,8 @@ class ReservationUpdateRequest extends FormRequest
             ];
         } else {
             return [
-                'user_id' => 'sometimes|required|integer',
-                'reservation_time' => 'sometimes|required|date',
+                'login' => 'sometimes|required',
+                'reservation_time' => 'sometimes|required|date|after:now',
                 'peoples' => 'sometimes|required|integer',
                 'game_id' => 'sometimes|required|integer',
                 'room_id' => 'sometimes|required|integer',

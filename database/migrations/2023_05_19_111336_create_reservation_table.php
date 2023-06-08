@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('reservation_id');
             $table->dateTime('reservation_time');
+            $table->dateTime('reservation_time_end')->nullable();
             $table->integer('peoples');
             $table->unsignedInteger('game_id');
             $table->unsignedInteger('room_id');

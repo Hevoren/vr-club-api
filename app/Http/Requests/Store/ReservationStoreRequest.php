@@ -11,9 +11,7 @@ class ReservationStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = $this->user();
-
-        return $user !== null && $user->tokenCan('create');
+        return true;
     }
 
     /**
@@ -25,7 +23,7 @@ class ReservationStoreRequest extends FormRequest
     {
         return [
             'login' => 'required',
-            'reservation_time' => 'required|date',
+            'reservation_time' => 'required|date|after:now',
             'peoples' => 'required|integer',
             'game_id' => 'required|integer',
             'room_id' => 'required|integer'

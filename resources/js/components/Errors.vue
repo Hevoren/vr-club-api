@@ -10,7 +10,7 @@ export default {
     computed: {
         errorMessages() {
             return Object.keys(this.validationErrors).map((name) => {
-                const messages = this.validationErrors[name].join(", ");
+                const messages = this.validationErrors[name];
                 return `${messages}`;
             });
         },
