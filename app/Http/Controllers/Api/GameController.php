@@ -78,7 +78,7 @@ class GameController extends Controller
             $game->delete();
             return response()->json(['message' => 'Game deleted']);
         } else {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
     }
 }

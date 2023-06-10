@@ -78,7 +78,7 @@ class RoleController extends Controller
             $role->delete();
             return response()->json(['message' => 'Role deleted']);
         } else {
-            return response()->json(['message' => 'Unauthorized']);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
     }
 }

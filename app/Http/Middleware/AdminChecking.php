@@ -19,6 +19,6 @@ class AdminChecking
         if ($user && $user->role_id === 1) {
             return $next($request);
         }
-        abort(403, 'Unauthorized');
+        return response()->json(['message' => 'Forbidden'], 403);
     }
 }

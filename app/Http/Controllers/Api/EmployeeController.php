@@ -78,7 +78,7 @@ class EmployeeController extends Controller
             $employee->delete();
             return response()->json(['message' => 'Employee delete'], 201);
         } else {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
     }
 

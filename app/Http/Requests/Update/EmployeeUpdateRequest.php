@@ -46,4 +46,24 @@ class EmployeeUpdateRequest extends FormRequest
             ];
         }
     }
+
+    public function attributes()
+    {
+        return [
+            'name' => 'Name',
+            'phone_number' => 'Phone number',
+            'status_id' => 'Status',
+            'surname' => 'Surname',
+            'mid_name' => 'Mid name',
+            'salary' => 'Salary',
+            'title' => 'Title',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'phone_number.regex' => ':attribute must be in format 8 (###) ###-##-##'
+        ];
+    }
 }

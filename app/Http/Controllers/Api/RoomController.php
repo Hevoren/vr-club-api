@@ -80,7 +80,7 @@ class RoomController extends Controller
             $room->delete();
             return response()->json(['message' => 'Room deleted']);
         } else {
-            return response()->json(['message' => 'Unauthorized']);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
     }
 }

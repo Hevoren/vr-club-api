@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreign('role_id')->references('role_id')->on('roles');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
-            $table->string('token', 64)->unique();
+            $table->float('balls')->default(0)->nullable();
             $table->timestamps();
         });
     }

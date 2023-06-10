@@ -79,7 +79,7 @@ class VrDeviceController extends Controller
             $vrdevice->delete();
             return response()->json(['message' => 'VrDevice deleted']);
         } else {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
     }
 }

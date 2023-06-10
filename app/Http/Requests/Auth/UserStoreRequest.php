@@ -26,11 +26,30 @@ class UserStoreRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
-            'login' => ['required', 'unique:users', 'alpha', new ValidationLogin],
-            'password' => ['required', new ValidationPassword],
+            'login' => ['required', 'unique:users', 'alpha', 'regex:/^[a-zA-Z]{3,20}$/'],
+            'password' => ['required', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}+$/'],
             'email' => 'required|email|unique:users',
             'role_id' => 'integer'
         ];
 
+    }
+
+    public function attributes()
+    {
+        return [
+            'name' => 'Name',
+            'surname' => 'Surname',
+            'login' => 'Login',
+            'email' => 'Email',
+            'password' => 'Password'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'login.regex' => 'The :attribute must contain from 3 to 20 Latin characters.',
+            'password.regex' => 'The :attribute must contain at least one lowercase letter, one uppercase letter and one digit.'
+        ];
     }
 }

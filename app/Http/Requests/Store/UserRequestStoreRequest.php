@@ -26,4 +26,19 @@ class UserRequestStoreRequest extends FormRequest
             'phone_number' => 'required|regex:/^8\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/'
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'name' => 'Name',
+            'phone_number' => 'Phone number'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'phone_number.regex' => ':attribute must be in format 8 (###) ###-##-##'
+        ];
+    }
 }

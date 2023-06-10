@@ -112,19 +112,33 @@ class ReservationController extends Controller
             $user = $request->user();
 
             $reservation = Reservation::find($id);
+
             if (!$reservation) {
                 return response()->json(['message' => 'Reservation not found'], 404);
             }
 
             if ($user->role_id === 1 || $reservation->user_id === $user->user_id) {
                 $game = Game::where('game_id', $reservation->game_id)->first();
+                $room = Room::where('room_id', $reservation->room_id)->first();
+
                 $reservation->update($request->all());
+
+                $game_price = $game->price;
+                $room_price = $room->price;
+
+                $all_price = $game_price + $room_price;
+                $balls = $user->balls;
+                $balls += $all_price * 0.01;
+                $user->balls = $balls;
+                $user->save();
+
                 $duration = $game->duration;
                 $time = Carbon::parse($reservation->reservation_time);
                 $reservation_time_end = $time->addMinutes($duration);
                 $reservation_time_end = $reservation_time_end->format('Y-m-d H-i-s');
                 $reservation->reservation_time_end = $reservation_time_end;
                 $reservation->save();
+
                 return (new ReservationResource($reservation))
                     ->additional(['message' => 'Reservation successfully updated'])
                     ->response()

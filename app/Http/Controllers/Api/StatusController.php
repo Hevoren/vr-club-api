@@ -78,7 +78,7 @@ class StatusController extends Controller
             $status->delete();
             return response()->json(['message' => 'Status deleted']);
         } else {
-            return response()->json(['message' => 'Unauthorized']);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
     }
 
