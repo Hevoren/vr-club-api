@@ -45,7 +45,7 @@ const mutations = {
     loginFailure(state, payload) {
         state.isSubmitting = false
         state.isLoggedIn = false
-        state.validationErrors = payload
+        state.validationErrors = payload.response.data
         state.isLoading = false
     },
     exitStart(state) {
@@ -127,6 +127,7 @@ const actions = {
                     resolve(response)
                 })
                 .catch((result) => {
+                    console.log(result)
                         context.commit('loginFailure', result)
                 })
         })

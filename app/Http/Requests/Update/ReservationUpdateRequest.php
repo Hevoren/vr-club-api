@@ -24,21 +24,13 @@ class ReservationUpdateRequest extends FormRequest
         $method = $this->method();
         if ($method === 'PUT') {
             return [
-                'login' => 'required',
-                'reservation_time' => 'required|date|after:now',
-                'peoples' => 'required|integer',
-                'game_id' => 'required|integer',
-                'room_id' => 'required|integer',
-                'all_price' => 'required|numeric'
+                'user_id' => 'integer',
+                'reservation_time' => 'required|date|after:now'
             ];
         } else {
             return [
-                'login' => 'sometimes|required',
-                'reservation_time' => 'sometimes|required|date|after:now',
-                'peoples' => 'sometimes|required|integer',
-                'game_id' => 'sometimes|required|integer',
-                'room_id' => 'sometimes|required|integer',
-                'all_price' => 'sometimes|required|numeric'
+                'user_id' => 'integer',
+                'reservation_time' => 'required|date|after:now'
             ];
         }
     }
