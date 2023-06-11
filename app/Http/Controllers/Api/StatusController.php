@@ -63,7 +63,7 @@ class StatusController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } else {
-            return response()->json(['message' => 'Status success added'], 201);
+            return response()->json(['message' => 'Status not found'], 404);
         }
     }
 

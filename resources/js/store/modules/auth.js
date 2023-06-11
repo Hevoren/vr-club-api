@@ -1,5 +1,6 @@
 import authApi from '../../api/auth.js'
 import VueCookies from 'vue-cookies'
+import index from 'vuex'
 
 const state = {
     isSubmitting: false,
@@ -119,12 +120,23 @@ const actions = {
                 .login(credentials)
                 .then((response) => {
                     credentials.token = response.data.bearer
-
+                    console.log(credentials.token)
                     VueCookies.set('login', credentials.login, "3600s")
                     VueCookies.set('password', credentials.password, "3600s")
-                    VueCookies.set('token', credentials.token, '3600s')
-                    context.commit('loginSuccess', credentials)
-                    resolve(response)
+                    if(credentials.token !== null || credentials.token !== 'undefined') {
+                        VueCookies.set('token', credentials.token, '3600s')
+                        context.commit('loginSuccess', credentials)
+                        resolve(response)
+                    } else {
+                        let payload = {
+                            response: {
+                                data: {
+                                    error: 'Error for creating token'
+                                }
+                            }
+                        }
+                        context.commit('loginFailure', payload)
+                    }
                 })
                 .catch((result) => {
                     console.log(result)

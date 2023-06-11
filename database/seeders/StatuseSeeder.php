@@ -14,11 +14,16 @@ class StatuseSeeder extends Seeder
      */
     public function run(): void
     {
-        Statuse::factory()->count(3)->create();
+        Statuse::create([
+            'status' => 'active'
+        ]);
 
-        // Создаем 10 сотрудников
-        Employee::factory()->count(20)->create([
-            'status_id' => $statuses->random()->status_id,
+        Statuse::create([
+            'status' => 'faired'
+        ]);
+
+        Statuse::create([
+            'status' => 'pending'
         ]);
     }
 }

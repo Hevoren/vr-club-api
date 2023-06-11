@@ -46,7 +46,7 @@ class AuthController extends Controller
                 $user->tokens()->delete();
 
                 $token = null;
-                if ($user->role_id === 1) {
+                if ($user->role_id === 1 || $user->role_id === 3) {
                     $token = $user->createToken('admin-token', ['create', 'update', 'delete']);
                 } elseif ($user->role_id === 2) {
                     $token = $user->createToken('basic-token', ['none']);

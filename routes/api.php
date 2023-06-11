@@ -46,9 +46,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:
 Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['admin', 'auth:sanctum']], function () {
     Route::apiResource('employees', EmployeeController::class);
     Route::apiResource('statuses', StatusController::class);
-    Route::apiResource('roles', RoleController::class);
-    Route::apiResource('users', UserController::class);
+});
 
+//for superadmin interaction
+Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['superadmin' ,'auth:sanctum']], function () {
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('roles', RoleController::class);
 });
 
 //email-verification

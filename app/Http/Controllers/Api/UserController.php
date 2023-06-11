@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\UserStoreRequest;
 use App\Http\Requests\Delete\DeleteRequest;
+use App\Http\Requests\Update\UserRoleUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -48,9 +49,22 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserRoleUpdateRequest $request, string $id)
     {
-        //
+        if ($request->validated()){
+            $user = User::find($id);
+            if ($user) {
+                $user->update([
+                    'role_id' => $request->role_id
+                ]);
+                return (new UserResource($user))
+                    ->additional(['message' => 'User successfully updated'])
+                    ->response()
+                    ->setStatusCode(201);
+            } else {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+        }
     }
 
     /**

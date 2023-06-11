@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Computer;
 
@@ -13,6 +12,10 @@ class ComputerSeeder extends Seeder
      */
     public function run(): void
     {
-        Computer::factory()->count(10)->create();
+        Computer::create([
+            'graphic_card' => 'GTX 1050TI',
+            'processor' => 'i5 1550',
+            'ram' => '16GB'
+        ]);
     }
 }

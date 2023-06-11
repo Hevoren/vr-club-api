@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Game;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class GameSeeder extends Seeder
@@ -13,6 +12,12 @@ class GameSeeder extends Seeder
      */
     public function run(): void
     {
-         Game::factory()->count(10)->create();
+        Game::create([
+            'game' => 'minecraft',
+            'genre' => 'horror',
+            'duration' => 12,
+            'price' => 1000,
+            'age_limit' => 12
+        ]);
     }
 }
