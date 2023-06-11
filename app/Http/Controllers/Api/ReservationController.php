@@ -50,12 +50,16 @@ class ReservationController extends Controller
 
             $all_price = $game->price + $room->price;
 
-            if ($request->has('login')) {
-                $user = User::where('login', $request->login)->first();
+            if ($user->role_id === 1 || $user->role_id === 3){
+                if ($request->has('login')) {
+                    $user = User::where('login', $request->login)->first();
 
-                if (!$user) {
-                    return response()->json(['message' => 'User not found'], 404);
+                    if (!$user) {
+                        return response()->json(['message' => 'User not found'], 404);
+                    }
                 }
+            } else {
+                return response()->json(['message' => 'Adding by login forbidden'], 403);
             }
 
             $reservation_time = Carbon::parse($request->reservation_time);
