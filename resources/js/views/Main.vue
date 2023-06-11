@@ -31,7 +31,7 @@ export default {
                 price: '',
             },
             reservations: {
-                login: localStorage.getItem('login'),
+                login: '',
                 reservation_time: '',
                 peoples: '',
                 game_id: '',
@@ -63,17 +63,17 @@ export default {
                 this.$store.dispatch('getItems', { apiUrl: this.apiEndPoint })
             } if (this.requestMethod === 'POST') {
                 if (this.apiEndPoint === '/computers' || this.apiEndPoint === '/computers/') {
-                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.computers })
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.computers) })
                 } else if (this.apiEndPoint === '/games' || this.apiEndPoint === '/games/') {
-                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.games })
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.games) })
                 } else if (this.apiEndPoint === '/reservations' || this.apiEndPoint === '/reservations/') {
-                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.reservations })
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.reservations) })
                 } else if (this.apiEndPoint === '/rooms' || this.apiEndPoint === '/rooms/') {
-                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.rooms })
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.rooms) })
                 } else if (this.apiEndPoint === '/vrdevices' || this.apiEndPoint === '/vrdevices/') {
-                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.vrdevices })
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.vrdevices) })
                 } else if (this.apiEndPoint === '/requests' || this.apiEndPoint === '/requests/') {
-                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.requests })
+                    this.$store.dispatch('setItems', { apiUrl: this.apiEndPoint, dataRequest: this.cutObject(this.requests) })
                 }
             } if (this.requestMethod === 'PATCH') {
                 if (this.apiEndPoint.includes("/computers/")) {
@@ -320,13 +320,16 @@ export default {
 
                                 <div v-if='(this.apiEndPoint === "/reservations" || this.apiEndPoint.includes("/reservations/"))'>
                                     <label for='reservation_time'>"reservation_time":
-                                        <input type='text' id='reservation_time'
+                                        <input type='datetime-local' id='reservation_time'
                                                v-model='reservations.reservation_time'>
+                                    </label>
+                                    <label for='peoples'>"login":
+                                        <input type='text' id='peoples' v-model='reservations.login'>
                                     </label>
                                     <label for='peoples'>"peoples":
                                         <input type='number' id='peoples' v-model='reservations.peoples'>
                                     </label>
-                                    <label for='game'>"game":
+                                    <label for='game'>"game_id":
                                         <input type='number' id='game' v-model='reservations.game_id'>
                                     </label>
                                     <label for='room_id'>"room_id":
