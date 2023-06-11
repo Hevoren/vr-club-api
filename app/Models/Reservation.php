@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,14 @@ class Reservation extends Model
     ];
 
     use HasFactory;
+
+    public function formattingDate($duration)
+    {
+        $time = Carbon::parse($this->reservation_time);
+        $this->reservation_time_end = $time->addMinutes($duration)->format('Y-m-d H:i');
+
+        return $this->reservation_time_end;
+    }
 
     public function games()
     {

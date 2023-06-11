@@ -26,6 +26,13 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'email_verified_at'
     ];
 
+    public function settingBalls($balls, $all_price)
+    {
+        $balls += $all_price * 0.01;
+        $this->balls = $balls;
+        $this->save();
+    }
+
     public function reservations()
     {
         return $this->hasMany(Reservation::class, 'user_id', 'user_id');

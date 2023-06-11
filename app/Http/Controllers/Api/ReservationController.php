@@ -23,16 +23,18 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        if ($user->role_id === 1) {
+
+        if ($user->role_id === 1 || $user->role_id === 3) {
             $reservation = Reservation::all();
-        } else if ($user->role_id === 2) {
+        } else if ($user->role_id === 2 ) {
             $reservation = Reservation::where('user_id', $user->user_id)->get();
-        }
-        if ($reservation) {
-            return ReservationResource::collection($reservation);
         } else {
-            return response()->json(['message' => 'Reservations not found'], 404);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
+        if (!$reservation) {
+            return response()->json(['message' => 'Reservations not found', 404]);
+        }
+        return ReservationResource::collection($reservation);
     }
 
     /**
@@ -46,13 +48,20 @@ class ReservationController extends Controller
             $game = Game::where('game_id', $request->game_id)->first();
             $room = Room::where('room_id', $request->room_id)->first();
 
-            $game_price = $game->price;
-            $room_price = $room->price;
+            $all_price = $game->price + $room->price;
 
-            $all_price = $game_price + $room_price;
+            if ($request->has('login')) {
+                $user = User::where('login', $request->login)->first();
 
+                if (!$user) {
+                    return response()->json(['message' => 'User not found'], 404);
+                }
+            }
+
+            $reservation_time = Carbon::parse($request->reservation_time);
             $reservation = Reservation::create([
-                'reservation_time' => $request->reservation_time,
+                'reservation_time' => $reservation_time->format('Y-m-d H:i'),
+                'reservation_time_end' => $reservation_time->addMinutes($game->duration)->format('Y-m-d H:i'),
                 'peoples' => $request->peoples,
                 'game_id' => $request->game_id,
                 'room_id' => $request->room_id,
@@ -60,26 +69,13 @@ class ReservationController extends Controller
                 'all_price' => $all_price
             ]);
 
-            $balls = $user->balls;
-            $balls += $all_price * 0.01;
-            $user->balls = $balls;
-            $user->save();
-
-            $reservation = Reservation::latest()->first();
-            $duration = $game->duration;
-            $time = Carbon::parse($reservation->reservation_time);
-            $reservation_time_end = $time->addMinutes($duration);
-            $reservation_time_end = $reservation_time_end->format('Y-m-d H-i-s');
-            $reservation->reservation_time_end = $reservation_time_end;
-            $reservation->save();
+            $user->settingBalls($user->balls, $all_price);
 
             return (new ReservationResource($reservation))
                 ->additional(['message' => 'Reservation success added'])
                 ->response()
                 ->setStatusCode(201);
         }
-
-
     }
 
     /**
@@ -94,7 +90,7 @@ class ReservationController extends Controller
             return response()->json(['message' => 'Reservation not found'], 404);
         }
 
-        if ($user->role_id === 1) {
+        if ($user->role_id === 1 || 3) {
             return new ReservationResource($reservation);
         } else if ($user->role_id === 2 && $reservation->user_id === $user->user_id) {
             return new ReservationResource($reservation);
@@ -117,27 +113,13 @@ class ReservationController extends Controller
                 return response()->json(['message' => 'Reservation not found'], 404);
             }
 
-            if ($user->role_id === 1 || $reservation->user_id === $user->user_id) {
+            if (($user->role_id === 1 || 3) || $reservation->user_id === $user->user_id) {
                 $game = Game::where('game_id', $reservation->game_id)->first();
-                $room = Room::where('room_id', $reservation->room_id)->first();
 
-                $reservation->update($request->all());
-
-                $game_price = $game->price;
-                $room_price = $room->price;
-
-                $all_price = $game_price + $room_price;
-                $balls = $user->balls;
-                $balls += $all_price * 0.01;
-                $user->balls = $balls;
-                $user->save();
-
-                $duration = $game->duration;
-                $time = Carbon::parse($reservation->reservation_time);
-                $reservation_time_end = $time->addMinutes($duration);
-                $reservation_time_end = $reservation_time_end->format('Y-m-d H-i-s');
-                $reservation->reservation_time_end = $reservation_time_end;
-                $reservation->save();
+                $reservation->update([
+                    'reservation_time' => $request->reservation_time,
+                    'reservation_time_end' => $reservation->formattingDate($game->duration)
+                ]);
 
                 return (new ReservationResource($reservation))
                     ->additional(['message' => 'Reservation successfully updated'])

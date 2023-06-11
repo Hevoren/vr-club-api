@@ -22,6 +22,7 @@ class ReservationStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'login' => 'string|alpha',
             'user_id' => 'integer',
             'reservation_time' => 'required|date|after:now',
             'peoples' => 'required|integer',

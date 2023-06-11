@@ -22,8 +22,8 @@ class UserLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login' => 'required|alpha|regex:/^[a-zA-Z]+$/',
-            'password' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+            'login' => 'required|string|alpha|regex:/^[a-zA-Z]+$/',
+            'password' => 'required|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
         ];
     }
 }

@@ -16,7 +16,7 @@ class AdminChecking
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if ($user && $user->role_id === 1) {
+        if ($user && $user->role_id === 1 || 3) {
             return $next($request);
         }
         return response()->json(['message' => 'Forbidden'], 403);
