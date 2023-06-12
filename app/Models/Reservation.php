@@ -23,12 +23,14 @@ class Reservation extends Model
 
     use HasFactory;
 
-    public function formattingDate($duration)
+    public static function checkReservation($start_time, $end_time, $room_id)
     {
-        $time = Carbon::parse($this->reservation_time);
-        $this->reservation_time_end = $time->addMinutes($duration)->format('Y-m-d H:i');
-
-        return $this->reservation_time_end;
+        return Reservation::where('room_id', $room_id)
+            ->where(function ($query) use ($start_time, $end_time) {
+                $query->whereBetween('reservation_time', [$start_time, $end_time])
+                    ->orWhereBetween('reservation_time_end', [$start_time, $end_time]);
+            })
+            ->exists();
     }
 
     public function games()

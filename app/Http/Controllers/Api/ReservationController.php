@@ -11,7 +11,6 @@ use App\Models\Game;
 use App\Models\Reservation;
 use App\Models\Room;
 use App\Models\User;
-use App\Rules\ValidationLogin;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -63,9 +62,15 @@ class ReservationController extends Controller
             }
 
             $reservation_time = Carbon::parse($request->reservation_time);
+            $reservation_time_end = $reservation_time->copy()->addMinutes($game->duration);
+
+            if (Reservation::checkReservation($reservation_time, $reservation_time_end, $request->room_id)) {
+                return response()->json(['message' => 'There is already a reservation with overlapping time'], 400);
+            }
+
             $reservation = Reservation::create([
                 'reservation_time' => $reservation_time->format('Y-m-d H:i'),
-                'reservation_time_end' => $reservation_time->addMinutes($game->duration)->format('Y-m-d H:i'),
+                'reservation_time_end' => $reservation_time_end->format('Y-m-d H:i'),
                 'peoples' => $request->peoples,
                 'game_id' => $request->game_id,
                 'room_id' => $request->room_id,
@@ -117,12 +122,19 @@ class ReservationController extends Controller
                 return response()->json(['message' => 'Reservation not found'], 404);
             }
 
-            if (($user->role_id === 1 || 3) || $reservation->user_id === $user->user_id) {
+            if (($user->role_id === 1 || $user->role_id === 3) || $reservation->user_id === $user->user_id) {
                 $game = Game::where('game_id', $reservation->game_id)->first();
 
+                $reservation_time = Carbon::parse($request->reservation_time);
+                $reservation_time_end = $reservation_time->copy()->addMinutes($game->duration);
+
+                if (Reservation::checkReservation($reservation_time, $reservation_time_end, $request->room_id)) {
+                    return response()->json(['message' => 'There is already a reservation with overlapping time'], 400);
+                }
+
                 $reservation->update([
-                    'reservation_time' => $request->reservation_time,
-                    'reservation_time_end' => $reservation->formattingDate($game->duration)
+                    'reservation_time' => $reservation_time,
+                    'reservation_time_end' => $reservation_time_end
                 ]);
 
                 return (new ReservationResource($reservation))
@@ -133,7 +145,6 @@ class ReservationController extends Controller
                 return response()->json(['message' => 'Forbidden'], 403);
             }
         }
-
     }
 
     /**

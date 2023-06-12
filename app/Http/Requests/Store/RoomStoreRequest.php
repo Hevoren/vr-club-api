@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Store;
 
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoomStoreRequest extends FormRequest
+class RoomStoreRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Delete;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class DeleteRequest extends FormRequest
+class BaseFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class DeleteRequest extends FormRequest
     {
         $user = $this->user();
 
-        $isAuthorized = $user !== null && $user->tokenCan('create', 'update', 'delete');
+        $isAuthorized = $user !== null && $user->tokenCan('create', 'update');
 
         if (!$isAuthorized) {
             $this->failedAuthorization(); // Call failedAuthorization method when authorization fails

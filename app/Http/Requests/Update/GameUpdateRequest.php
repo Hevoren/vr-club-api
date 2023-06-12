@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Update;
 
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class GameUpdateRequest extends FormRequest
+class GameUpdateRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
