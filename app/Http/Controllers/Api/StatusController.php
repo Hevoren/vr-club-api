@@ -59,7 +59,7 @@ class StatusController extends Controller
         if ($status) {
             $status->update($request->all());
             return (new StatusResource($status))
-                ->additional(['message' => 'Status successfully updated'])
+                ->additional(['message' => 'Status successfully updated'], 201)
                 ->response()
                 ->setStatusCode(200);
         } else {
@@ -78,13 +78,7 @@ class StatusController extends Controller
             $status->delete();
             return response()->json(['message' => 'Status deleted']);
         } else {
-            return response()->json(['message' => 'Forbidden'], 403);
+            return response()->json(['error' => 'Forbidden'], 403);
         }
-    }
-
-    public function destroyAll()
-    {
-        Statuse::query()->delete();
-        return response()->json('All statuses deleted');
     }
 }

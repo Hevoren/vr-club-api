@@ -27,9 +27,9 @@ class AuthController extends Controller
 
             $user->sendEmailVerificationNotification();
 
-            return response()->json(['message' => 'On your email has been send verification link']);
+            return response()->json(['message' => 'On your email has been send verification link'], 201);
         } else {
-            return response()->json(['message' => 'Error registration']);
+            return response()->json(['error' => 'Error registration', 400]);
         }
     }
 
@@ -40,7 +40,7 @@ class AuthController extends Controller
 
             if ($user && Hash::check($request->password, $user->password)) {
                 if (!$user->email_verified_at) {
-                    return response()->json(['message' => 'Account not verified'], 422);
+                    return response()->json(['error' => 'Account not verified'], 422);
                 }
 
                 $user->tokens()->delete();
@@ -54,12 +54,12 @@ class AuthController extends Controller
                 if ($token) {
                     return response()->json(['bearer' => $token->plainTextToken, 'role_id' => $user->role_id]);
                 } else {
-                    return response()->json(['message' => 'Error creating token']);
+                    return response()->json(['error' => 'Error creating token'], 400);
                 }
             }
         }
 
-        return response()->json(['message' => 'Invalid login or password'], 422);
+        return response()->json(['error' => 'Invalid login or password'], 422);
     }
 
 

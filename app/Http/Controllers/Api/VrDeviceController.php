@@ -77,9 +77,9 @@ class VrDeviceController extends Controller
         // Проверяем, авторизован ли пользователь и имеет ли он права на удаление
         if ($request->user()->tokenCan('delete')) {
             $vrdevice->delete();
-            return response()->json(['message' => 'VrDevice deleted']);
+            return response()->json(['message' => 'VrDevice deleted'], 201);
         } else {
-            return response()->json(['message' => 'Forbidden'], 403);
+            return response()->json(['error' => 'Forbidden'], 403);
         }
     }
 }

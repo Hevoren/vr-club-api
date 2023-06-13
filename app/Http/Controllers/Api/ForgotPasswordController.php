@@ -20,7 +20,7 @@ class ForgotPasswordController extends Controller
             $request->only('email')
         );
 
-        return response()->json(['message' => 'Reset link sent on your email']);
+        return response()->json(['message' => 'Reset link sent on your email'], 201);
     }
 
     public function getEmailForgotPassword(string $token)
@@ -49,6 +49,6 @@ class ForgotPasswordController extends Controller
             }
         );
 
-        return response()->json(['message' => 'Success']);
+        return response()->json(['message' => 'Success'], 201);
     }
 }

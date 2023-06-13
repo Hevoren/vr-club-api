@@ -14,26 +14,32 @@ class ChangeUserInfo extends Controller
     public function updateUserInfo(Request $request)
     {
         $request->validate([
-            'login' => 'required',
+            'user_id' => 'integer',
             'password' => 'required|min:8|max:20|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'confirm_password' => 'required|min:8|max:20|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'name' => 'sometimes|max:255',
             'surname' => 'sometimes|max:255',
         ]);
 
-        $user = User::where('login', $request->login)->first();
+        $user = $request->user();
 
-        if (Hash::check($request->password, $user->password)) {
-            $name = $request->has('name') ? $request->name : $user->name;
-            $surname = $request->has('surname') ? $request->surname : $user->surname;
+        if ($request->password === $request->confirm_password) {
+            if (Hash::check($request->password, $user->password)) {
+                $name = $request->has('name') ? $request->name : $user->name;
+                $surname = $request->has('surname') ? $request->surname : $user->surname;
 
-            $user->update([
-                'name' => $name,
-                'surname' => $surname,
-            ]);
+                $user->update([
+                    'name' => $name,
+                    'surname' => $surname,
+                ]);
 
-            return response()->json(['message' => 'Userinfo changed successfully']);
+                return response()->json(['message' => 'Userinfo changed successfully'], 201);
+            } else {
+                return response()->json(['error' => 'Incorrect password'], 400);
+            }
         } else {
-            return response()->json(['message' => 'Error for updating userinfo']);
+            return response()->json(['error' => 'Passwords dont match'], 400);
         }
+
     }
 }

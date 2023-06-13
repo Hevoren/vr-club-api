@@ -27,7 +27,7 @@ class UserRequestController extends Controller
     {
         $userrequest = UserRequest::all();
         if ($userrequest) {
-            return UserRequestResource::collection(UserRequest::all());
+            return response()->json(['user_requests' => UserRequestResource::collection(UserRequest::all())], 201);
         } else {
             return response()->json(['message' => 'Requests not found'], 404);
         }

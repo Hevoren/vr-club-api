@@ -15,9 +15,9 @@ class VerificationEmail extends Controller
         if ($user && hash_equals($request->hash, sha1($user->getEmailForVerification()))) {
             $user->markEmailAsVerified();
             $request->user = $user;
-            return response()->json(['message' => 'Email verified']);
+            return response()->json(['message' => 'Email verified'], 201);
         } else {
-            return response()->json(['message' => 'Error for verification email']);
+            return response()->json(['error' => 'Error for verification email'], 400);
         }
     }
 
@@ -25,7 +25,7 @@ class VerificationEmail extends Controller
     {
         $user = User::where('login', $request->login)->first();
         if ($user->email_verified_at) {
-            return response()->json(['message' => 'You already successfully verified account']);
+            return response()->json(['message' => 'You already successfully verified account'], 201);
         }
     }
 
@@ -34,8 +34,8 @@ class VerificationEmail extends Controller
         $user = User::where('login', $request->login)->first();
         if (!$user->email_verified_at) {
             $user->sendEmailVerificationNotification();
-            return response()->json(['message' => 'On your email resend verification link']);
+            return response()->json(['message' => 'On your email resend verification link'], 201);
         }
-        return response()->json(['message' => 'You already successfully verified account']);
+        return response()->json(['message' => 'You already successfully verified account'], 201);
     }
 }

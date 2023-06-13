@@ -78,13 +78,7 @@ class EmployeeController extends Controller
             $employee->delete();
             return response()->json(['message' => 'Employee delete'], 201);
         } else {
-            return response()->json(['message' => 'Forbidden'], 403);
+            return response()->json(['error' => 'Forbidden'], 403);
         }
-    }
-
-    public function destroyAll()
-    {
-        Employee::query()->delete();
-        return response()->json('All employees deleted');
     }
 }

@@ -65,7 +65,7 @@ class ReservationController extends Controller
             $reservation_time_end = $reservation_time->copy()->addMinutes($game->duration);
 
             if (Reservation::checkReservation($reservation_time, $reservation_time_end, $request->room_id)) {
-                return response()->json(['message' => 'There is already a reservation with overlapping time'], 400);
+                return response()->json(['message' => 'There is already a reservation with overlapping time'], 409);
             }
 
             $reservation = Reservation::create([
@@ -129,7 +129,7 @@ class ReservationController extends Controller
                 $reservation_time_end = $reservation_time->copy()->addMinutes($game->duration);
 
                 if (Reservation::checkReservation($reservation_time, $reservation_time_end, $request->room_id)) {
-                    return response()->json(['message' => 'There is already a reservation with overlapping time'], 400);
+                    return response()->json(['message' => 'There is already a reservation with overlapping time'], 409);
                 }
 
                 $reservation->update([
@@ -142,7 +142,7 @@ class ReservationController extends Controller
                     ->response()
                     ->setStatusCode(200);
             } else {
-                return response()->json(['message' => 'Forbidden'], 403);
+                return response()->json(['error' => 'Forbidden'], 403);
             }
         }
     }
@@ -156,9 +156,14 @@ class ReservationController extends Controller
 
         if ($request->user()->tokenCan('delete')) {
             $reservation->delete();
-            return response()->json(['message' => 'Reservation deleted']);
+            return response()->json(['message' => 'Reservation deleted'], 201);
         } else {
-            return response()->json(['message' => 'Forbidden']);
+            return response()->json(['error' => 'Forbidden'], 403);
         }
+    }
+
+    public function allReservations()
+    {
+        return response()->json(['reservations' => Reservation::all()]);
     }
 }

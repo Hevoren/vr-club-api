@@ -76,9 +76,9 @@ class GameController extends Controller
 
         if($request->user()->tokenCan('delete')) {
             $game->delete();
-            return response()->json(['message' => 'Game deleted']);
+            return response()->json(['message' => 'Game deleted'], 201);
         } else {
-            return response()->json(['message' => 'Forbidden'], 403);
+            return response()->json(['error' => 'Forbidden'], 403);
         }
     }
 }

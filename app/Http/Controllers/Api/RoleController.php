@@ -30,11 +30,7 @@ class RoleController extends Controller
      */
     public function store(RoleStoreRequest $request)
     {
-        $role = Role::create($request->validated());
-        return (new RoleResource($role))
-            ->additional(['message' => 'Role success added'])
-            ->response()
-            ->setStatusCode(201);
+        return response()->json(['error' => 'Forbidden'], 403);
     }
 
     /**
@@ -55,16 +51,7 @@ class RoleController extends Controller
      */
     public function update(RoleUpdateRequest $request, string $id)
     {
-        $role = Role::find($id);
-        if ($role) {
-            $role->update($request->all());
-            return (new RoleResource($role))
-                ->additional(['message' => 'Role successfully updated'])
-                ->response()
-                ->setStatusCode(200);
-        } else {
-            return response()->json(['message' => 'Role not found'], 404);
-        }
+        return response()->json(['error' => 'Forbidden'], 403);
     }
 
     /**
@@ -72,13 +59,6 @@ class RoleController extends Controller
      */
     public function destroy(DeleteRequest $request, string $id)
     {
-        $role = Role::findOrFail($id);
-
-        if ($request->user()->tokenCan('delete')) {
-            $role->delete();
-            return response()->json(['message' => 'Role deleted']);
-        } else {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        return response()->json(['error' => 'Forbidden'], 403);
     }
 }

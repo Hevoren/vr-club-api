@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\ChangeUserInfo;
 use App\Http\Controllers\Api\ComputerController;
+use App\Http\Controllers\Api\CurrentUserController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\GameController;
 use App\Http\Controllers\Api\PageForgotPassword;
@@ -32,11 +33,13 @@ use Illuminate\Support\Facades\Route;
 
 //for user/admin interaction
 Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:sanctum', 'verify']], function () {
-    Route::apiResource('computers', ComputerController::class);
+
     Route::apiResource('games', GameController::class);
     Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('rooms', RoomController::class);
     Route::apiResource('vrdevices', VrDeviceController::class);
+    Route::get('current-user', [CurrentUserController::class, 'showUser']);
+    Route::get('all-reservations', [ReservationController::class, 'allReservations']);
     Route::post('change-password', [ChangePasswordController::class, 'changePassword']);
     Route::post('change-user-info', [ChangeUserInfo::class, 'updateUserInfo']);
     Route::post('logout', [AuthController::class, 'logoutUser']);
@@ -44,6 +47,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['auth:
 
 //for admin interaction
 Route::group(['namespace' => 'App\Http\Controllers\Api', 'middleware' => ['admin', 'auth:sanctum']], function () {
+    Route::apiResource('computers', ComputerController::class);
     Route::apiResource('employees', EmployeeController::class);
     Route::apiResource('statuses', StatusController::class);
 });

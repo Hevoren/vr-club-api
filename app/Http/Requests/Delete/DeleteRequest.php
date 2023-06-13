@@ -25,7 +25,7 @@ class DeleteRequest extends FormRequest
 
     protected function failedAuthorization()
     {
-        throw new HttpResponseException(response()->json(['message' => 'Forbidden'], 403));
+        throw new HttpResponseException(response()->json(['error' => 'Forbidden'], 403));
     }
 
     /**

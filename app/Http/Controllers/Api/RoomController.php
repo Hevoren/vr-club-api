@@ -78,9 +78,9 @@ class RoomController extends Controller
 
         if ($request->user()->tokenCan('delete')) {
             $room->delete();
-            return response()->json(['message' => 'Room deleted']);
+            return response()->json(['message' => 'Room deleted'], 201);
         } else {
-            return response()->json(['message' => 'Forbidden'], 403);
+            return response()->json(['error' => 'Forbidden'], 403);
         }
     }
 }

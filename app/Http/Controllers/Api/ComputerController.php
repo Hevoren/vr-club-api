@@ -80,7 +80,7 @@ class ComputerController extends Controller
                 $computer->delete();
                 return response()->json(['message' => 'Computer deleted'], 201);
             } else {
-                return response()->json(['message' => 'Forbidden'], 403);
+                return response()->json(['error' => 'Forbidden'], 403);
             }
         }
 }

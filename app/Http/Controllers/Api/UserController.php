@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       //
+        return response()->json(['error' => 'Forbidden'], 403);
     }
 
     /**
@@ -72,6 +72,6 @@ class UserController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
-        //
+        return response()->json(['error' => 'Forbidden'], 403);
     }
 }
