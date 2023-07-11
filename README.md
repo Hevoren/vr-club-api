@@ -20,7 +20,11 @@ To install and run this project, please follow these steps:
 + **Step 2: Install Dependencies**\
     Install the required dependencies by running the following command:
     ```
-    coomposer install then npm install
+    coomposer install
+    ```
+    then
+    ```
+    npm install
     ```
 
 + **Step 3: Set up the Database**\
